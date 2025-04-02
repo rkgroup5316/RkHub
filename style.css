@@ -13,16 +13,17 @@
     --tg-theme-section-header-text-color: var(--tg-var-section-header-text-color, var(--tg-theme-text-color));
 
     /* Status Colors */
-    --status-online: #4CAF50; 
+    --status-online: #4CAF50;
     --status-offline: #F44336;
     --status-pending: #ffc107;
     --status-error: #FF9800;
 
     /* Card & UI Elements */
     --card-bg-color: var(--tg-theme-secondary-bg-color);
-    --card-border-color: color-mix(in srgb, var(--tg-theme-hint-color) 20%, transparent);
-    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --card-shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.12);
+    --card-border-color: color-mix(in srgb, var(--tg-theme-hint-color) 15%, transparent); /* Slightly more subtle border */
+    /* --- Refined Shadows --- */
+    --card-shadow: 0 3px 10px rgba(0, 0, 0, 0.07); /* Softer shadow */
+    --card-shadow-hover: 0 5px 15px rgba(0, 0, 0, 0.1); /* Slightly deeper but soft hover shadow */
     --border-radius-sm: 8px;
     --border-radius-md: 12px;
     --border-radius-lg: 16px;
@@ -30,7 +31,7 @@
     --spacing-sm: 10px;
     --spacing-md: 16px;
     --spacing-lg: 24px;
-    
+
     /* Animation Speeds */
     --anim-speed-fast: 0.2s;
     --anim-speed-normal: 0.3s;
@@ -42,6 +43,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
 }
 
 html {
@@ -60,8 +62,8 @@ body {
     -moz-osx-font-smoothing: grayscale;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
-    padding: 0;
+    min-height: 100vh; /* Use min-height for flexible content */
+    /* padding removed as app-container handles width/margins */
 }
 
 /* Container Structure */
@@ -69,28 +71,31 @@ body {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    max-width: 800px;
+    max-width: 800px; /* Adjust max-width if needed */
     margin: 0 auto;
     width: 100%;
-    position: relative;
+    position: relative; /* Needed for potential absolute positioning inside */
+    background-color: var(--tg-theme-bg-color); /* Ensure container has base bg */
 }
 
 /* Header Styling */
 .app-header {
-    background-color: var(--tg-theme-header-bg-color);
+    /* --- Refined Blur Background --- */
+    background-color: color-mix(in srgb, var(--tg-theme-header-bg-color) 85%, transparent); /* Use color-mix for transparency */
     padding: var(--spacing-md) var(--spacing-lg);
     text-align: center;
     border-bottom: 1px solid var(--card-border-color);
     position: sticky;
     top: 0;
     z-index: 10;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(12px); /* Slightly more blur */
+    -webkit-backdrop-filter: blur(12px);
+    transition: background-color var(--anim-speed-normal) ease; /* Smooth theme changes */
 }
 
 .app-header h1 {
-    font-size: 1.5em;
-    font-weight: 700;
+    font-size: 1.4em; /* Slightly smaller for minimalism */
+    font-weight: 600; /* Use 600 for modern boldness */
     color: var(--tg-theme-text-color);
     margin: 0;
     letter-spacing: -0.01em;
@@ -100,24 +105,34 @@ body {
 .app-content {
     flex-grow: 1;
     padding: var(--spacing-md);
-    background-color: var(--tg-theme-section-bg-color);
+    background-color: var(--tg-theme-section-bg-color); /* Use section color */
     overflow-y: auto;
+    position: relative; /* Context for page transitions if needed */
 }
 
 /* Page Sections & Transitions */
 .page-content {
-    display: none;
-    animation: fadeIn 0.4s ease-in-out;
+    display: none; /* Hide inactive pages */
+    /* Use animation for entry */
+    animation: pageEnter var(--anim-speed-normal) ease-out forwards;
 }
 
 .page-content.active-page {
-    display: block;
+    display: block; /* Show active page */
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+/* --- Refined Page Animation --- */
+@keyframes pageEnter {
+    from {
+        opacity: 0;
+        transform: translateY(8px); /* Subtle slide up */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
+
 
 /* Enhanced Info Cards */
 .info-card {
@@ -127,25 +142,28 @@ body {
     margin-bottom: var(--spacing-md);
     box-shadow: var(--card-shadow);
     border: 1px solid var(--card-border-color);
-    transition: transform var(--anim-speed-normal) ease, 
-                box-shadow var(--anim-speed-normal) ease;
+    transition: transform var(--anim-speed-normal) ease,
+                box-shadow var(--anim-speed-normal) ease,
+                background-color var(--anim-speed-normal) ease; /* Smooth theme changes */
     overflow: hidden;
     position: relative;
 }
 
 .info-card.animated {
-    animation: cardEntrance 0.4s ease-out;
-    animation-fill-mode: both;
+    animation: cardEntrance 0.4s ease-out backwards; /* Use backwards to apply start state */
 }
 
-.info-card:nth-child(1) { animation-delay: 0.1s; }
-.info-card:nth-child(2) { animation-delay: 0.2s; }
-.info-card:nth-child(3) { animation-delay: 0.3s; }
+/* Stagger card entrance animations */
+.info-card.animated:nth-child(1) { animation-delay: 0.05s; }
+.info-card.animated:nth-child(2) { animation-delay: 0.1s; }
+.info-card.animated:nth-child(3) { animation-delay: 0.15s; }
+/* Add more if needed */
+
 
 @keyframes cardEntrance {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(15px); /* Slightly smaller entrance distance */
     }
     to {
         opacity: 1;
@@ -154,14 +172,14 @@ body {
 }
 
 .info-card:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px); /* Slightly more lift */
     box-shadow: var(--card-shadow-hover);
 }
 
 .card-header {
     display: flex;
     align-items: center;
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-sm); /* Reduced gap */
     gap: var(--spacing-sm);
 }
 
@@ -169,40 +187,44 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
+    width: 36px; /* Slightly smaller */
+    height: 36px;
+    border-radius: var(--border-radius-sm); /* Match corner radius style */
     background-color: color-mix(in srgb, var(--tg-theme-link-color) 15%, transparent);
     color: var(--tg-theme-link-color);
-    margin-bottom: var(--spacing-sm);
+     /* Removed margin-bottom, rely on gap in card-header */
 }
+.card-icon i {
+    font-size: 1.1em; /* Adjust icon size if needed */
+}
+
 
 .card-content {
     flex: 1;
 }
 
 .info-card h2 {
-    font-size: 1.2em;
+    font-size: 1.15em; /* Slightly adjusted size */
     font-weight: 600;
     color: var(--tg-theme-section-header-text-color);
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs); /* Tighter spacing */
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
 }
 
-.info-card .icon {
-    font-size: 1.2em;
+.info-card .icon { /* General icon styling within card */
+    font-size: 1.1em;
+    opacity: 0.9;
 }
 
-.info-card .icon.pulse {
-    animation: pulse 2s infinite;
+.info-card .icon.pulse { /* Specific pulse styling */
+    animation: pulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1); /* Smoother pulse */
 }
 
 @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
+    0%, 100% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.1); opacity: 1; }
 }
 
 .info-card p {
@@ -219,9 +241,9 @@ body {
 .status-legend {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--spacing-md);
-    margin: var(--spacing-md) 0;
-    padding: var(--spacing-sm) 0;
+    gap: var(--spacing-sm) var(--spacing-md); /* Row and column gap */
+    margin: var(--spacing-md) 0 0 0; /* Only top margin */
+    padding-top: var(--spacing-sm);
     border-top: 1px dashed var(--card-border-color);
 }
 
@@ -230,6 +252,11 @@ body {
     align-items: center;
     gap: var(--spacing-xs);
     font-size: 0.85em;
+    color: var(--tg-theme-hint-color); /* Use hint color for legend text */
+}
+/* Align status dot baseline with text */
+.status-item .status-indicator {
+    transform: translateY(1px);
 }
 
 /* Enhanced Link Lists */
@@ -237,17 +264,19 @@ body {
     list-style: none;
     padding: 0;
     margin: 0;
+    /* Consider adding margin if list is directly in .app-content */
+    /* margin: var(--spacing-md) calc(-1 * var(--spacing-md)); */
 }
 
 .link-list li {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--spacing-md) var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md); /* Consistent padding */
     border-bottom: 1px solid var(--card-border-color);
-    min-height: 50px;
-    transition: background-color var(--anim-speed-fast) ease,
-                transform var(--anim-speed-fast) ease;
+    min-height: 48px; /* Slightly reduced height */
+    transition: background-color var(--anim-speed-fast) ease;
+    cursor: pointer; /* Indicate clickable item */
 }
 
 .link-list li:last-child {
@@ -256,53 +285,70 @@ body {
 
 .link-list li:hover {
     background-color: color-mix(in srgb, var(--tg-theme-link-color) 5%, transparent);
-    transform: translateX(2px);
+    /* Remove transform on li hover, apply to link content if desired */
 }
 
 .link-list a {
     color: var(--tg-theme-link-color);
     text-decoration: none;
-    font-weight: 500;
-    transition: color var(--anim-speed-fast) ease;
+    font-weight: 500; /* Slightly less bold */
+    transition: color var(--anim-speed-fast) ease, transform var(--anim-speed-fast) ease;
     flex-grow: 1;
     margin-right: var(--spacing-sm);
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
+    /* Move the hover transform target to the link */
+    transition: transform var(--anim-speed-fast) ease;
 }
 
-.link-list a:hover {
-    color: color-mix(in srgb, var(--tg-theme-link-color) 80%, black);
+.link-list li:hover a {
+    /* color: color-mix(in srgb, var(--tg-theme-link-color) 80%, black); */ /* Keep original color or slightly darker */
+    transform: translateX(3px); /* Subtle push on hover */
 }
 
 .link-list a .icon {
     opacity: 0.8;
+    transition: opacity var(--anim-speed-fast) ease;
+    font-size: 1.1em; /* Ensure consistent icon size */
 }
 
 .external-icon {
     font-size: 0.8em;
-    opacity: 0.5;
+    opacity: 0.6; /* Slightly more visible */
     transition: opacity var(--anim-speed-fast) ease,
                 transform var(--anim-speed-fast) ease;
 }
 
 .link-list li:hover .external-icon {
-    opacity: 0.8;
-    transform: translateX(2px);
+    opacity: 0.9;
+    transform: translateX(2px); /* Move with the link hover */
 }
+
 
 /* Skeleton Loading Animation */
 .skeleton-loader {
     position: relative;
     overflow: hidden;
-    background: linear-gradient(90deg, 
-        var(--card-bg-color) 25%, 
-        color-mix(in srgb, var(--card-bg-color) 90%, var(--tg-theme-hint-color)) 50%, 
-        var(--card-bg-color) 75%);
+    /* Refined gradient for smoother look */
+    background: linear-gradient(90deg,
+        color-mix(in srgb, var(--card-bg-color) 95%, var(--tg-theme-hint-color)) 0%,
+        color-mix(in srgb, var(--card-bg-color) 85%, var(--tg-theme-hint-color)) 50%,
+        color-mix(in srgb, var(--card-bg-color) 95%, var(--tg-theme-hint-color)) 100%
+    );
     background-size: 200% 100%;
-    animation: loading 1.5s infinite;
+    animation: loading 1.8s infinite linear; /* Slightly slower, linear */
     border-radius: var(--border-radius-sm);
+    opacity: 0.7; /* Make skeleton slightly transparent */
 }
+/* Example usage for text line skeleton */
+.skeleton-line {
+    height: 1em;
+    margin-bottom: var(--spacing-sm);
+    border-radius: 4px;
+}
+.skeleton-line.short { width: 60%; }
+.skeleton-line.long { width: 90%; }
 
 @keyframes loading {
     0% { background-position: 200% 0; }
@@ -312,52 +358,45 @@ body {
 /* Status Indicators */
 .status-indicator {
     display: inline-block;
-    width: 12px;
-    height: 12px;
+    width: 10px; /* Smaller dots */
+    height: 10px;
     border-radius: 50%;
-    margin-left: var(--spacing-sm);
+    margin-left: var(--spacing-xs); /* Reduced margin */
     flex-shrink: 0;
     vertical-align: middle;
     transition: all var(--anim-speed-normal) ease;
     position: relative;
-    box-shadow: 0 0 0 rgba(0,0,0,0.1);
+    box-shadow: 0 0 0 rgba(0,0,0,0.1); /* Base shadow reset */
 }
 
-.status-indicator::after {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    border-radius: 50%;
-    z-index: -1;
-}
+/* Removed ::after pseudo-element unless specifically needed for complex effects */
 
 .status-pending {
     background-color: var(--status-pending);
-    animation: pulse-status 1.5s infinite ease-in-out;
+    animation: pulse-status 1.8s infinite ease-in-out;
 }
 
-@keyframes pulse-status {
-    0% { transform: scale(1); opacity: 0.7; box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.5); }
-    50% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 0 5px rgba(255, 193, 7, 0); }
-    100% { transform: scale(1); opacity: 0.7; box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
+@keyframes pulse-status { /* Refined pulsing */
+    0% { transform: scale(1); box-shadow: 0 0 0 0 color-mix(in srgb, var(--status-pending) 50%, transparent); }
+    70% { transform: scale(1.15); box-shadow: 0 0 0 6px color-mix(in srgb, var(--status-pending) 0%, transparent); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 color-mix(in srgb, var(--status-pending) 0%, transparent); }
 }
 
-.status-online { 
-    background-color: var(--status-online); 
-    box-shadow: 0 0 6px rgba(76, 175, 80, 0.4);
+
+.status-online {
+    background-color: var(--status-online);
+    /* More subtle shadow */
+    box-shadow: 0 0 4px color-mix(in srgb, var(--status-online) 50%, transparent);
 }
 
-.status-offline { 
+.status-offline {
     background-color: var(--status-offline);
-    box-shadow: 0 0 6px rgba(244, 67, 54, 0.4);
+    box-shadow: 0 0 4px color-mix(in srgb, var(--status-offline) 50%, transparent);
 }
 
-.status-error { 
+.status-error {
     background-color: var(--status-error);
-    box-shadow: 0 0 6px rgba(255, 152, 0, 0.4);
+    box-shadow: 0 0 4px color-mix(in srgb, var(--status-error) 50%, transparent);
 }
 
 /* Enhanced Button */
@@ -376,46 +415,57 @@ body {
     border-radius: var(--border-radius-md);
     cursor: pointer;
     transition: all var(--anim-speed-fast) ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    /* Softer button shadow */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     position: relative;
     overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
 }
 
-.styled-button::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(rgba(255, 255, 255, 0.1), transparent);
-    opacity: 0;
-    transition: opacity var(--anim-speed-fast) ease;
-}
+/* Remove pseudo-element gradient overlay for cleaner look */
+/* .styled-button::after { ... } */
 
 .styled-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.styled-button:hover::after {
-    opacity: 1;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+    /* Slightly darken button on hover for feedback */
+    background-color: color-mix(in srgb, var(--tg-theme-button-color) 90%, black);
 }
 
 .styled-button:active {
-    transform: translateY(1px);
+    transform: translateY(0px); /* Less movement on active */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: color-mix(in srgb, var(--tg-theme-button-color) 80%, black);
 }
 
 .styled-button:disabled {
-    opacity: 0.6;
+    opacity: 0.5; /* More noticeable disabled state */
     cursor: not-allowed;
-    background-color: var(--tg-theme-hint-color);
+    background-color: var(--tg-theme-hint-color); /* Use hint color directly */
     transform: translateY(0);
     box-shadow: none;
 }
+.styled-button:disabled:hover { /* Prevent hover styles on disabled */
+     background-color: var(--tg-theme-hint-color);
+     box-shadow: none;
+     transform: translateY(0);
+}
 
-.styled-button.loading .fa-sync-alt {
+
+.styled-button.loading {
+    opacity: 0.8;
+    cursor: default;
+}
+
+.styled-button.loading .button-text { /* Hide text when loading */
+    display: none;
+}
+.styled-button.loading .icon { /* Show only spinner */
+    margin: 0 auto; /* Center spinner */
+}
+
+.styled-button .icon.fa-sync-alt, /* Assuming FontAwesome */
+.styled-button .icon.spinner { /* Add a generic spinner class */
     animation: spin 1s linear infinite;
 }
 
@@ -428,24 +478,27 @@ body {
 .disclaimer {
     font-size: 0.8em;
     color: var(--tg-theme-hint-color);
-    margin-top: var(--spacing-sm);
-    padding-top: var(--spacing-sm);
+    margin-top: var(--spacing-lg); /* More space before disclaimer */
+    padding-top: var(--spacing-md);
     border-top: 1px dashed var(--card-border-color);
+    text-align: center; /* Center align disclaimer */
 }
 
 /* Enhanced Bottom Navigation */
 .app-nav {
     display: flex;
     justify-content: space-around;
-    padding: var(--spacing-xs) 0;
-    background-color: var(--tg-theme-secondary-bg-color);
+    padding: var(--spacing-xs) 0; /* Vertical padding only */
+    /* --- Refined Blur Background --- */
+    background-color: color-mix(in srgb, var(--tg-theme-secondary-bg-color) 85%, transparent);
     border-top: 1px solid var(--card-border-color);
     position: sticky;
     bottom: 0;
     z-index: 10;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.07); /* Slightly softer shadow */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: background-color var(--anim-speed-normal) ease; /* Smooth theme changes */
 }
 
 .nav-item {
@@ -455,68 +508,58 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: var(--spacing-sm) var(--spacing-md);
-    font-size: 0.75em;
+    justify-content: center; /* Center content vertically */
+    padding: var(--spacing-sm) var(--spacing-sm); /* Adjusted padding */
+    font-size: 0.75em; /* Keep small font size */
     cursor: pointer;
-    transition: all var(--anim-speed-normal) ease;
+    transition: color var(--anim-speed-normal) ease;
     flex-grow: 1;
     text-align: center;
     position: relative;
+    min-height: 50px; /* Ensure consistent height */
+    -webkit-tap-highlight-color: transparent;
 }
 
 .nav-icon {
-    display: flex;
+    display: flex; /* Use flex for icon container */
     align-items: center;
     justify-content: center;
     height: 24px;
     width: 24px;
-    margin-bottom: 4px;
+    margin-bottom: 3px; /* Slightly less space */
     transition: transform var(--anim-speed-fast) ease;
 }
 
-.nav-item i {
-    font-size: 1.4em;
+.nav-item i { /* Target icon specifically */
+    font-size: 1.5em; /* Slightly larger icon */
+    line-height: 1; /* Prevent extra space */
 }
 
-.nav-item::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%) scaleX(0);
-    width: 20px;
-    height: 3px;
-    background-color: var(--tg-theme-link-color);
-    border-radius: 2px;
-    transition: transform var(--anim-speed-normal) ease;
-}
+/* Remove underline indicator for minimalism */
+/* .nav-item::after { ... } */
 
-.nav-item:hover {
-    color: var(--tg-theme-text-color);
+.nav-item:hover:not(.active) { /* Hover only on non-active */
+    color: var(--tg-theme-text-color); /* Subtle color change on hover */
 }
 
 .nav-item:hover .nav-icon {
-    transform: translateY(-2px);
+    transform: scale(1.1); /* Scale icon slightly on hover */
 }
 
 .nav-item.active {
     color: var(--tg-theme-link-color);
-    font-weight: 600;
-}
-
-.nav-item.active::after {
-    transform: translateX(-50%) scaleX(1);
+    font-weight: 600; /* Make text bolder */
 }
 
 .nav-item.active .nav-icon {
-    transform: translateY(-2px);
+    transform: scale(1.15); /* Make active icon slightly larger */
 }
 
 /* Fatal Error Styling */
 .fatal-error {
     padding: var(--spacing-lg);
     background-color: color-mix(in srgb, var(--status-error) 10%, transparent);
-    border: 1px solid var(--status-error);
+    border: 1px solid color-mix(in srgb, var(--status-error) 50%, transparent); /* Softer border */
     border-radius: var(--border-radius-md);
     margin: var(--spacing-lg);
     text-align: center;
@@ -525,9 +568,15 @@ body {
 .fatal-error h3 {
     color: var(--status-error);
     margin-bottom: var(--spacing-md);
+    font-weight: 600;
+}
+.fatal-error p {
+    color: var(--tg-theme-text-color);
+    margin-bottom: var(--spacing-md);
 }
 
-.fatal-error button {
+.fatal-error button { /* Reuse styled-button */
+    /* Basic button styles if not using .styled-button class */
     margin-top: var(--spacing-md);
     padding: var(--spacing-sm) var(--spacing-lg);
     background-color: var(--tg-theme-button-color);
@@ -535,20 +584,31 @@ body {
     border: none;
     border-radius: var(--border-radius-sm);
     cursor: pointer;
+    font-weight: 500;
 }
 
-/* Dark Mode Enhancements */
+/* Dark Mode Enhancements (Mostly handled by TG Vars, but specific tweaks ok) */
 @media (prefers-color-scheme: dark) {
-    .info-card {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    :root {
+       /* Slightly adjust shadows for dark mode if needed */
+       --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+       --card-shadow-hover: 0 6px 18px rgba(0, 0, 0, 0.2);
+       --card-border-color: color-mix(in srgb, var(--tg-theme-hint-color) 25%, transparent); /* Darker border */
     }
-    
+
     .card-icon {
-        background-color: color-mix(in srgb, var(--tg-theme-link-color) 25%, transparent);
+        background-color: color-mix(in srgb, var(--tg-theme-link-color) 20%, transparent);
     }
-    
+
     .link-list li:hover {
-        background-color: color-mix(in srgb, var(--tg-theme-link-color) 8%, transparent);
+        background-color: color-mix(in srgb, var(--tg-theme-link-color) 10%, transparent);
+    }
+
+    .styled-button:hover {
+       background-color: color-mix(in srgb, var(--tg-theme-button-color) 85%, white); /* Lighten slightly on hover in dark */
+    }
+     .styled-button:active {
+       background-color: color-mix(in srgb, var(--tg-theme-button-color) 75%, white);
     }
 }
 
@@ -556,15 +616,22 @@ body {
 @media (max-width: 768px) {
     :root {
         --spacing-md: 14px;
-        --spacing-lg: 20px;
+        --spacing-lg: 18px; /* Reduced large spacing */
+        --border-radius-md: 10px; /* Slightly smaller radius */
     }
-    
+
     .app-header {
         padding: var(--spacing-sm) var(--spacing-md);
     }
-    
+    .app-header h1 {
+        font-size: 1.3em;
+    }
+
     .info-card h2 {
         font-size: 1.1em;
+    }
+    .info-card {
+        padding: var(--spacing-md);
     }
 }
 
@@ -572,41 +639,33 @@ body {
     :root {
         --spacing-sm: 8px;
         --spacing-md: 12px;
+        --spacing-lg: 16px;
+        --border-radius-md: 8px;
     }
-    
+
     body {
-        font-size: 14px;
+        font-size: 15px; /* Slightly larger base on small screens */
     }
-    
+
+    .app-header h1 {
+        font-size: 1.2em;
+    }
+
     .status-legend {
-        flex-direction: column;
-        gap: var(--spacing-xs);
+         /* Keep flex-wrap for smaller screens, adjust gap */
+         gap: var(--spacing-xs) var(--spacing-sm);
     }
-    
-    .nav-item span {
-        font-size: 0.9em;
+    .info-card h2 {
+        font-size: 1.05em;
     }
-}
 
-/* Animations for Page Transitions */
-@keyframes slideUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-/* Add subtle motion to inactive pages for when they become active */
-.page-content {
-    transform: translateY(10px); 
-    opacity: 0;
-    transition: transform var(--anim-speed-normal) ease, opacity var(--anim-speed-normal) ease;
-}
-
-.page-content.active-page {
-    transform: translateY(0);
-    opacity: 1;
+    .nav-item {
+        min-height: 48px; /* Ensure tap target size */
+    }
+    .nav-item span { /* Target the text label if it exists */
+        font-size: 0.85em; /* Ensure readability */
+    }
+    .nav-item i {
+        font-size: 1.4em;
+    }
 }
