@@ -307,66 +307,66 @@ async function checkBotStatus(indicator) {
 
     try {
         // --- Strategy 1: Standard Fetch (Requires CORS configured on the server) ---
-        checkMethod = 'fetch (standard)';
-        console.log(`Checking ${hostname} using standard fetch...`);
-        try {
-            const response = await fetch(statusUrl, {
-                method: 'HEAD', // Use HEAD for efficiency
-                cache: 'no-cache',
-                signal: controller.signal,
-                redirect: 'follow', // Important: follow redirects
-                 // **NO** mode: 'no-cors' here!
-            });
+        // checkMethod = 'fetch (standard)';
+        // console.log(`Checking ${hostname} using standard fetch...`);
+        // try {
+        //     const response = await fetch(statusUrl, {
+        //         method: 'HEAD', // Use HEAD for efficiency
+        //         cache: 'no-cache',
+        //         signal: controller.signal,
+        //         redirect: 'follow', // Important: follow redirects
+        //          // **NO** mode: 'no-cors' here!
+        //     });
 
-            clearTimeout(fetchTimeoutId); // Clear fetch-specific timeout
+        //     clearTimeout(fetchTimeoutId); // Clear fetch-specific timeout
 
-            if (response.ok) { // Status 200-299?
-                isOnline = true;
-                console.log(`Standard fetch successful (status ${response.status}) for ${hostname}.`);
-            } else {
-                // Server responded, but with an error status (4xx, 5xx)
-                isOnline = false;
-                errorDetail = `Server responded with status ${response.status}`;
-                console.warn(`Standard fetch for ${hostname} returned non-OK status: ${response.status}`);
-            }
+        //     if (response.ok) { // Status 200-299?
+        //         isOnline = true;
+        //         console.log(`Standard fetch successful (status ${response.status}) for ${hostname}.`);
+        //     } else {
+        //         // Server responded, but with an error status (4xx, 5xx)
+        //         isOnline = false;
+        //         errorDetail = `Server responded with status ${response.status}`;
+        //         console.warn(`Standard fetch for ${hostname} returned non-OK status: ${response.status}`);
+        //     }
 
-        } catch (fetchError) {
-            clearTimeout(fetchTimeoutId); // Clear timeout on error too
+        // } catch (fetchError) {
+        //     clearTimeout(fetchTimeoutId); // Clear timeout on error too
 
-            if (fetchError.name === 'AbortError') {
-                // Fetch timed out via AbortController
-                console.warn(`Standard fetch timed out for ${hostname}.`);
-                isOnline = false;
-                errorDetail = 'Fetch timed out';
-                checkMethod = 'fetch (standard, timeout)';
-                // Don't proceed to Image Ping if fetch itself timed out
-                throw fetchError; // Propagate timeout to outer catch block
+        //     if (fetchError.name === 'AbortError') {
+        //         // Fetch timed out via AbortController
+        //         console.warn(`Standard fetch timed out for ${hostname}.`);
+        //         isOnline = false;
+        //         errorDetail = 'Fetch timed out';
+        //         checkMethod = 'fetch (standard, timeout)';
+        //         // Don't proceed to Image Ping if fetch itself timed out
+        //         throw fetchError; // Propagate timeout to outer catch block
 
-            } else if (fetchError instanceof TypeError) {
-                // Often indicates Network error OR CORS issue
-                 console.warn(`Standard fetch failed for ${hostname}. Likely CORS or Network Error:`, fetchError.message);
-                 // Assume offline unless we specifically try Image Ping
-                 isOnline = false; // Default to offline on TypeError
-                 errorDetail = `Workspace failed (Network/CORS?)`;
-                 checkMethod = 'fetch (standard, failed)';
+        //     } else if (fetchError instanceof TypeError) {
+        //         // Often indicates Network error OR CORS issue
+        //          console.warn(`Standard fetch failed for ${hostname}. Likely CORS or Network Error:`, fetchError.message);
+        //          // Assume offline unless we specifically try Image Ping
+        //          isOnline = false; // Default to offline on TypeError
+        //          errorDetail = `Workspace failed (Network/CORS?)`;
+        //          checkMethod = 'fetch (standard, failed)';
 
-                 // If CORS is suspected, we *could* try the Image ping, but let's keep it simple first:
-                 // Treat TypeError (Network/CORS failure) as OFFLINE for now.
-                 // If you absolutely need to check behind CORS without server changes, uncomment Image Ping below.
+        //          // If CORS is suspected, we *could* try the Image ping, but let's keep it simple first:
+        //          // Treat TypeError (Network/CORS failure) as OFFLINE for now.
+        //          // If you absolutely need to check behind CORS without server changes, uncomment Image Ping below.
 
-            } else {
-                 // Other unexpected fetch errors
-                 console.error(`Unexpected standard fetch error for ${hostname}:`, fetchError);
-                 isOnline = false;
-                 errorDetail = `Unexpected fetch error: ${fetchError.message}`;
-                 checkMethod = 'fetch (standard, error)';
-            }
-        }
+        //     } else {
+        //          // Other unexpected fetch errors
+        //          console.error(`Unexpected standard fetch error for ${hostname}:`, fetchError);
+        //          isOnline = false;
+        //          errorDetail = `Unexpected fetch error: ${fetchError.message}`;
+        //          checkMethod = 'fetch (standard, error)';
+        //     }
+        // }
 
         /* --- Optional Strategy 2: Image Ping (If standard fetch fails due to CORS) ---
            * Uncomment this section ONLY if you cannot configure CORS on the statusUrl server
            * AND you accept the limitations of Image pinging.
-           * It's generally less reliable than a proper fetch check.
+           * It's generally less reliable than a proper fetch check.*/
 
         if (!isOnline && checkMethod.includes('failed') && errorDetail && errorDetail.includes('CORS')) {
              checkMethod = 'Image Ping';
@@ -414,7 +414,7 @@ async function checkBotStatus(indicator) {
                  document.body.appendChild(img);
              });
         }
-        */
+        
 
         // --- Final Result Determination ---
         if (isOnline) {
