@@ -2,350 +2,447 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Telegram Mini App</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/telegram-web-app/6.7.0/telegram-web-app.js"></script>
-      <link rel="stylesheet" href="styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"> <title>Your Telegram Mini App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script> <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Basic styles to prevent content shift during load */
+        .item-list { min-height: 100px; }
+    </style>
 </head>
 <body>
     <div class="container">
-        <!-- Profile Section -->
         <div class="profile">
             <img src="https://raw.githubusercontent.com/RKgroupkg/RKGROUP/refs/heads/main/Assets/Logo/Your%20paragraph%20text.png" alt="Profile Image" class="profile-img">
             <h1>Rkgroup</h1>
             <h2>Your Professional Title</h2>
-            <p>Welcome to my Telegram Mini App! I'm a passionate developer/creator who specializes in building innovative solutions. Explore my channels and bots below.</p>
+            <p>Welcome to my Telegram Mini App! Explore my channels and bots below. Click on any item for more details.</p>
             <div class="social-links">
-                <a href="#" class="social-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-                    </svg>
+                <a href="#" class="social-btn" aria-label="Facebook">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"> <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path> </svg>
                 </a>
-                <a href="#" class="social-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                    </svg>
+                <a href="#" class="social-btn" aria-label="Instagram">
+                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"> <path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.27.058 2.158.247 2.933.547.8.3 1.477.755 2.122 1.398.632.647 1.088 1.328 1.39 2.126.3.772.49 1.66.548 2.926.058 1.264.07 1.644.07 4.846s-.012 3.582-.07 4.846c-.058 1.266-.248 2.154-.548 2.926-.302.798-.758 1.48-1.39 2.126-.64.637-1.32.1088-2.126.139-.772.3-1.66.49-2.926.548-1.264.058-1.644.07-4.846.07s-3.582-.012-4.846-.07c-1.266-.058-2.154-.248-2.926-.548-.798-.302-1.48-.758-2.126-1.39-.637-.64-1.088-1.32-1.39-2.126-.3-.772-.49-1.66-.548-2.926-.058-1.264-.07-1.644-.07-4.846s.012-3.582.07-4.846c.058-1.266.248-2.154.548-2.926.302-.798.758-1.48 1.39-2.126.64-.637 1.32-.1088 2.126-.139.772-.3 1.66-.49 2.926-.548C8.418 2.175 8.796 2.163 12 2.163zm0 1.623c-3.146 0-3.486.01-4.71.067-1.16.053-1.814.23-2.346.436-.56.217-.99.52-1.42.953-.43.433-.736.86-.952 1.42-.208.53-.385 1.185-.438 2.347-.056 1.223-.067 1.563-.067 4.71s.01 3.486.067 4.71c.053 1.16.23 1.814.438 2.346.217.56.52.99.952 1.42.43.433.86.736 1.42.952.53.208 1.185.385 2.347.438 1.223.056 1.563.067 4.71.067s3.486-.01 4.71-.067c1.16-.053 1.814-.23 2.346-.438.56-.217.99-.52 1.42-.952.433-.43.736-.86.952-1.42.208-.53.385-1.185.438-2.347.056-1.223.067-1.563.067-4.71s-.01-3.486-.067-4.71c-.053-1.16-.23-1.814-.438-2.346-.217-.56-.52-.99-.952-1.42-.433-.43-.86-.736-1.42-.952-.53-.208-1.185-.385-2.347-.438C15.486 3.797 15.146 3.786 12 3.786zm0 2.978c-3.308 0-6 2.692-6 6s2.692 6 6 6 6-2.692 6-6-2.692-6-6-6zm0 1.623c2.42 0 4.377 1.957 4.377 4.377s-1.957 4.377-4.377 4.377-4.377-1.957-4.377-4.377 1.957-4.377 4.377-4.377zm6.406-1.69c-.74 0-1.344.604-1.344 1.344s.604 1.344 1.344 1.344 1.344-.604 1.344-1.344-.604-1.344-1.344-1.344z"></path> </svg>
                 </a>
-                <a href="#" class="social-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
-                    </svg>
+                <a href="#" class="social-btn" aria-label="Twitter">
+                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"> <path d="M23.643 4.937c-.835.37-1.732.62-2.675.733a4.67 4.67 0 0 0 2.048-2.578 9.3 9.3 0 0 1-2.958 1.13 4.66 4.66 0 0 0-7.938 4.25 13.229 13.229 0 0 1-9.602-4.868c-.4.69-.63 1.49-.63 2.342A4.66 4.66 0 0 0 3.96 9.824a4.647 4.647 0 0 1-2.11-.583v.06a4.66 4.66 0 0 0 3.737 4.568 4.692 4.692 0 0 1-2.104.08 4.661 4.661 0 0 0 4.35 3.234 9.348 9.348 0 0 1-5.786 1.995 9.5 9.5 0 0 1-1.112-.065 13.175 13.175 0 0 0 7.14 2.093c8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602a9.49 9.49 0 0 0 2.323-2.41z"></path> </svg>
                 </a>
-                <a href="#" class="social-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                        <rect x="2" y="9" width="4" height="12"></rect>
-                        <circle cx="4" cy="4" r="2"></circle>
-                    </svg>
+                <a href="#" class="social-btn" aria-label="LinkedIn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"> <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path> </svg>
                 </a>
             </div>
         </div>
 
-        <!-- Tabs Navigation -->
         <div class="tabs">
             <button class="tab-btn active ripple" data-tab="channels">Channels</button>
             <button class="tab-btn ripple" data-tab="bots">Bots</button>
         </div>
 
-        <!-- Channels Tab Content -->
         <div class="tab-content active" id="channels">
             <div class="item-list">
-                <div class="item-card ripple" data-id="channel1">
-                    <img src="/api/placeholder/120/120" alt="Channel 1" class="item-img">
-                    <div class="item-info">
-                        <h3>Channel Name 1</h3>
-                        <p>Latest updates and content about technology, programming and more.</p>
-                    </div>
-                    <span class="chevron">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </span>
                 </div>
-
-                <div class="item-card ripple" data-id="channel2">
-                    <img src="/api/placeholder/120/120" alt="Channel 2" class="item-img">
-                    <div class="item-info">
-                        <h3>Channel Name 2 <span class="badge">NEW</span></h3>
-                        <p>Daily inspiration, motivation, and valuable resources for your growth.</p>
-                    </div>
-                    <span class="chevron">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </span>
-                </div>
-
-                <div class="item-card ripple" data-id="channel3">
-                    <img src="/api/placeholder/120/120" alt="Channel 3" class="item-img">
-                    <div class="item-info">
-                        <h3>Channel Name 3</h3>
-                        <p>Exclusive content, behind-the-scenes, and community discussions.</p>
-                    </div>
-                    <span class="chevron">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </span>
-                </div>
-            </div>
         </div>
 
-        <!-- Bots Tab Content -->
         <div class="tab-content" id="bots">
             <div class="item-list">
-                <div class="item-card ripple" data-id="bot1">
-                    <img src="/api/placeholder/120/120" alt="Bot 1" class="item-img">
-                    <div class="item-info">
-                        <h3>Bot Name 1</h3>
-                        <p>Automated assistant for managing your daily tasks and scheduling.</p>
-                    </div>
-                    <span class="chevron">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </span>
                 </div>
-
-                <div class="item-card ripple" data-id="bot2">
-                    <img src="/api/placeholder/120/120" alt="Bot 2" class="item-img">
-                    <div class="item-info">
-                        <h3>Bot Name 2 <span class="badge">NEW</span></h3>
-                        <p>AI-powered bot that provides instant answers to your questions.</p>
-                    </div>
-                    <span class="chevron">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </span>
-                </div>
-
-                <div class="item-card ripple" data-id="bot3">
-                    <img src="/api/placeholder/120/120" alt="Bot 3" class="item-img">
-                    <div class="item-info">
-                        <h3>Bot Name 3</h3>
-                        <p>Interactive bot for fun games and entertainment in your groups.</p>
-                    </div>
-                    <span class="chevron">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </span>
-                </div>
-            </div>
         </div>
     </div>
 
-    <!-- Modal for Item Details -->
     <div class="modal" id="detailModal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title">Item Details</h2>
-                <button class="close-btn" id="closeModal">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
+                <button class="close-btn" id="closeModal" aria-label="Close modal">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"> <line x1="18" y1="6" x2="6" y2="18"></line> <line x1="6" y1="6" x2="18" y2="18"></line> </svg>
                 </button>
             </div>
-            <img src="/api/placeholder/640/360" alt="Channel/Bot" class="modal-img" id="modalImg">
-            <div class="modal-description" id="modalDesc">
-                Detailed information about this channel or bot will appear here. This section can include the purpose, content type, frequency of updates, and other relevant details.
-            </div>
-            <div class="modal-stats">
-                <div class="stat">
-                    <div class="stat-value" id="statMembers">5.2K</div>
-                    <div class="stat-label">Members</div>
+            <img src="" alt="" class="modal-img" id="modalImg"> <div class="modal-description" id="modalDesc"></div>
+            <div class="modal-stats" id="modalStats">
                 </div>
-                <div class="stat">
-                    <div class="stat-value" id="statPosts">120</div>
-                    <div class="stat-label">Posts</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value" id="statRating">4.8</div>
-                    <div class="stat-label">Rating</div>
-                </div>
-            </div>
-            <a href="#" class="cta-btn ripple" id="actionBtn">Join Channel</a>
-        </div>
+
+            <div class="modal-extra-info" id="modalExtraInfo">
+                 </div>
+
+            <a href="#" class="cta-btn ripple" id="actionBtn">Action</a> </div>
     </div>
 
     <script>
-        // Data for channels and bots
+        // --- DATA FOR CHANNELS AND BOTS ---
+        // Structure: { id: { properties... } }
+        // NEW: Added 'type', 'shortDesc', 'helpText', 'commands' fields
         const data = {
             channels: {
                 channel1: {
+                    type: 'channel',
                     title: "Tech Insights",
-                    image: "/api/placeholder/640/360",
-                    description: "Your go-to channel for the latest updates in technology, programming tips, industry news, and in-depth analysis. We cover everything from AI and machine learning to web development and mobile apps.",
+                    shortDesc: "Latest tech updates, programming tips.", // For list view
+                    image: "https://via.placeholder.com/120/8EBBFF/000000?text=Tech", // Placeholder - REPLACE
+                    modalImage: "https://via.placeholder.com/640x360/8EBBFF/000000?text=Tech+Insights", // Placeholder - REPLACE
+                    description: "Your go-to channel for the latest updates in technology, programming tips, industry news, and in-depth analysis. We cover everything from AI and machine learning to web development and mobile apps.", // For modal
                     members: "5.2K",
-                    posts: "120",
-                    rating: "4.8",
+                    posts: "120", // Or null/undefined if not applicable
+                    rating: "4.8", // Or null/undefined
                     action: "Join Channel",
-                    actionUrl: "https://t.me/channel1"
+                    actionUrl: "https://t.me/your_channel_1" // Placeholder - REPLACE
                 },
                 channel2: {
+                    type: 'channel',
                     title: "Daily Motivation",
-                    image: "/api/placeholder/640/360",
+                    shortDesc: "Inspiration, motivation, growth resources.",
+                    isNew: true, // Flag for the 'NEW' badge
+                    image: "https://via.placeholder.com/120/FFD700/000000?text=Motivate", // Placeholder - REPLACE
+                    modalImage: "https://via.placeholder.com/640x360/FFD700/000000?text=Daily+Motivation", // Placeholder - REPLACE
                     description: "Start your day with inspiration! This channel provides daily quotes, motivational stories, productivity tips, and resources to help you grow personally and professionally.",
                     members: "3.7K",
                     posts: "365",
                     rating: "4.9",
                     action: "Subscribe",
-                    actionUrl: "https://t.me/channel2"
+                    actionUrl: "https://t.me/your_channel_2" // Placeholder - REPLACE
                 },
                 channel3: {
+                    type: 'channel',
                     title: "Creator's Studio",
-                    image: "/api/placeholder/640/360",
+                    shortDesc: "Exclusive content, behind-the-scenes.",
+                    image: "https://via.placeholder.com/120/CDB4DB/000000?text=Studio", // Placeholder - REPLACE
+                    modalImage: "https://via.placeholder.com/640x360/CDB4DB/000000?text=Creator+Studio", // Placeholder - REPLACE
                     description: "Get exclusive behind-the-scenes content, early access to new projects, and join community discussions. This is where I share my creative process and connect with my audience.",
                     members: "2.1K",
                     posts: "78",
                     rating: "4.6",
                     action: "Join Now",
-                    actionUrl: "https://t.me/channel3"
+                    actionUrl: "https://t.me/your_channel_3" // Placeholder - REPLACE
                 }
+                // Add more channels here by copying the structure
             },
             bots: {
                 bot1: {
+                    type: 'bot',
                     title: "TaskMaster Bot",
-                    image: "/api/placeholder/640/360",
-                    description: "An automated assistant that helps you manage tasks, set reminders, schedule events, and track your productivity. Perfect for busy professionals and teams who need to stay organized.",
-                    members: "8.3K",
-                    posts: "N/A",
+                    shortDesc: "Automated assistant for tasks & scheduling.",
+                    image: "https://via.placeholder.com/120/A2D2FF/000000?text=Task", // Placeholder - REPLACE
+                    modalImage: "https://via.placeholder.com/640x360/A2D2FF/000000?text=TaskMaster", // Placeholder - REPLACE
+                    description: "An automated assistant that helps you manage tasks, set reminders, schedule events, and track your productivity. Perfect for busy professionals and teams.",
+                    helpText: "Just send me your task (e.g., 'Remind me to call John tomorrow at 10 am') or use commands.",
+                    commands: [ // NEW: Array of commands
+                        { command: "/newtask", description: "Create a new task." },
+                        { command: "/viewtasks", description: "See your active tasks." },
+                        { command: "/help", description: "Show this help message." }
+                    ],
+                    members: "8.3K Users", // Use 'Users' or 'Active Users' for bots
+                    posts: null, // Bots don't have posts typically
                     rating: "4.7",
                     action: "Start Bot",
-                    actionUrl: "https://t.me/bot1"
+                    actionUrl: "https://t.me/your_bot_1_bot" // Placeholder - REPLACE (Bot links usually end in _bot)
                 },
                 bot2: {
-                    title: "Knowledge AI Bot",
-                    image: "/api/placeholder/640/360",
+                    type: 'bot',
+                    title: "Knowledge AI",
+                    shortDesc: "AI-powered bot for instant answers.",
+                    isNew: true,
+                    image: "https://via.placeholder.com/120/BDE0FE/000000?text=AI", // Placeholder - REPLACE
+                    modalImage: "https://via.placeholder.com/640x360/BDE0FE/000000?text=Knowledge+AI", // Placeholder - REPLACE
                     description: "AI-powered assistant that provides instant answers to your questions, helps with research, and offers explanations on complex topics. It's like having a personal tutor available 24/7.",
-                    members: "10.5K",
-                    posts: "N/A",
+                    helpText: "Simply ask me any question!",
+                    commands: [
+                         { command: "/ask", description: "Ask a question directly." },
+                         { command: "/topic", description: "Get info on a specific topic." }
+                    ],
+                    members: "10.5K Users",
+                    posts: null,
                     rating: "4.9",
                     action: "Chat Now",
-                    actionUrl: "https://t.me/bot2"
+                    actionUrl: "https://t.me/your_bot_2_bot" // Placeholder - REPLACE
                 },
                 bot3: {
+                    type: 'bot',
                     title: "GameZone Bot",
-                    image: "/api/placeholder/640/360",
-                    description: "Interactive entertainment bot that brings fun games to your Telegram groups. Features include trivia, word games, puzzles, and multiplayer competitions to engage with friends.",
-                    members: "6.2K",
-                    posts: "N/A",
+                    shortDesc: "Interactive bot for fun games.",
+                    image: "https://via.placeholder.com/120/FFC8DD/000000?text=Game", // Placeholder - REPLACE
+                    modalImage: "https://via.placeholder.com/640x360/FFC8DD/000000?text=GameZone", // Placeholder - REPLACE
+                    description: "Interactive entertainment bot that brings fun games to your Telegram groups. Features include trivia, word games, puzzles, and multiplayer competitions.",
+                    helpText: "Add me to a group and use /games to see available options.",
+                     commands: [
+                        { command: "/games", description: "List available games." },
+                        { command: "/startquiz", description: "Begin a trivia quiz." },
+                        { command: "/leaderboard", description: "Show top players." }
+                    ],
+                    members: "6.2K Groups", // Or 'Installs'
+                    posts: null,
                     rating: "4.5",
-                    action: "Play Games",
-                    actionUrl: "https://t.me/bot3"
+                    action: "Add to Group", // Action text can vary
+                    actionUrl: "https://t.me/your_bot_3_bot?startgroup=true" // Placeholder - REPLACE
                 }
+                 // Add more bots here by copying the structure
             }
         };
 
-        // Initialize Telegram WebApp
+        // --- TELEGRAM WEB APP INIT ---
         const telegramWebApp = window.Telegram?.WebApp;
         if (telegramWebApp) {
             telegramWebApp.ready();
-            telegramWebApp.expand();
-            
-            // Set theme based on Telegram theme
-            if (telegramWebApp.colorScheme === 'dark') {
-                document.documentElement.style.setProperty('--bg-light', '#1E1E1E');
-                document.documentElement.style.setProperty('--bg-card', '#2A2A2A');
-                document.documentElement.style.setProperty('--text', '#FFFFFF');
-                document.documentElement.style.setProperty('--border', '#3A3A3A');
-            }
+            telegramWebApp.expand(); // Expand the Mini App window
+
+            // Basic Theme Handling (Keep your original logic)
+            document.documentElement.setAttribute('data-theme', telegramWebApp.colorScheme);
+            telegramWebApp.onEvent('themeChanged', () => {
+                 document.documentElement.setAttribute('data-theme', telegramWebApp.colorScheme);
+            });
+
+            // Enable closing confirmation if needed
+            // telegramWebApp.enableClosingConfirmation();
+
+            // Haptic feedback example (can use on button clicks)
+            // telegramWebApp.HapticFeedback.impactOccurred('light');
+        } else {
+            console.warn("Telegram WebApp script not loaded or not in Telegram environment.");
         }
 
-        // Tab navigation
+        // --- DOM ELEMENTS ---
         const tabBtns = document.querySelectorAll('.tab-btn');
         const tabContents = document.querySelectorAll('.tab-content');
-
-        tabBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                // Remove active class from all tabs
-                tabBtns.forEach(b => b.classList.remove('active'));
-                tabContents.forEach(c => c.classList.remove('active'));
-                
-                // Add active class to clicked tab
-                btn.classList.add('active');
-                const tabId = btn.getAttribute('data-tab');
-                document.getElementById(tabId).classList.add('active');
-            });
-        });
-
-        // Modal functionality
         const modal = document.getElementById('detailModal');
-        const closeModal = document.getElementById('closeModal');
-        const itemCards = document.querySelectorAll('.item-card');
+        const closeModalBtn = document.getElementById('closeModal');
         const modalTitle = document.querySelector('.modal-title');
         const modalImg = document.getElementById('modalImg');
         const modalDesc = document.getElementById('modalDesc');
-        const statMembers = document.getElementById('statMembers');
-        const statPosts = document.getElementById('statPosts');
-        const statRating = document.getElementById('statRating');
+        const modalStatsContainer = document.getElementById('modalStats'); // Get stats container
+        const modalExtraInfoContainer = document.getElementById('modalExtraInfo'); // Get extra info container
         const actionBtn = document.getElementById('actionBtn');
 
-        // Open modal with item details
-        itemCards.forEach(card => {
-            card.addEventListener('click', () => {
-                const itemId = card.getAttribute('data-id');
-                const tabId = document.querySelector('.tab-btn.active').getAttribute('data-tab');
-                const itemData = data[tabId][itemId];
-                
-                // Update modal content
-                modalTitle.textContent = itemData.title;
-                modalImg.src = itemData.image;
-                modalImg.alt = itemData.title;
-                modalDesc.textContent = itemData.description;
-                statMembers.textContent = itemData.members;
-                statPosts.textContent = itemData.posts;
-                statRating.textContent = itemData.rating;
-                actionBtn.textContent = itemData.action;
-                actionBtn.href = itemData.actionUrl;
-                
-                // Show modal
-                modal.classList.add('open');
-                
-                // Add a little animation delay for better UX
+        // --- FUNCTIONS ---
+
+        // Function to create HTML for a single item card
+        function createItemCard(id, item) {
+            const card = document.createElement('div');
+            card.className = 'item-card ripple';
+            card.setAttribute('data-id', id);
+            card.setAttribute('data-type', item.type); // Store type (channel/bot)
+
+            const badgeHtml = item.isNew ? '<span class="badge">NEW</span>' : '';
+
+            card.innerHTML = `
+                <img src="${item.image}" alt="${item.title}" class="item-img">
+                <div class="item-info">
+                    <h3>${item.title} ${badgeHtml}</h3>
+                    <p>${item.shortDesc}</p>
+                </div>
+                <span class="chevron">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"> <polyline points="9 18 15 12 9 6"></polyline> </svg>
+                </span>
+            `;
+
+            // Add click listener to open modal
+            card.addEventListener('click', () => openModal(id, item.type));
+
+            // Add ripple effect listener (optional but nice)
+            addRippleEffect(card);
+
+            return card;
+        }
+
+        // Function to render items for a specific tab
+        function renderItems(tabId) {
+            const listContainer = document.querySelector(`#${tabId} .item-list`);
+            if (!listContainer) return;
+
+            listContainer.innerHTML = ''; // Clear existing items
+            const items = data[tabId];
+
+            for (const id in items) {
+                if (items.hasOwnProperty(id)) {
+                    const card = createItemCard(id, items[id]);
+                    listContainer.appendChild(card);
+                }
+            }
+        }
+
+        // Function to open and populate the modal
+        function openModal(itemId, itemType) {
+            const itemData = data[itemType][itemId];
+            if (!itemData) return;
+
+             if (telegramWebApp) telegramWebApp.HapticFeedback.impactOccurred('light'); // Haptic feedback
+
+            // Update basic modal content
+            modalTitle.textContent = itemData.title;
+            modalImg.src = itemData.modalImage || itemData.image; // Use modalImage if available
+            modalImg.alt = itemData.title;
+            modalDesc.textContent = itemData.description;
+            actionBtn.textContent = itemData.action;
+            actionBtn.setAttribute('data-url', itemData.actionUrl); // Store URL in data attribute
+
+            // Update Stats (Dynamically create stat elements)
+            modalStatsContainer.innerHTML = ''; // Clear previous stats
+            const statsToShow = [
+                { label: itemType === 'bot' ? 'Users' : 'Members', value: itemData.members },
+                { label: 'Posts', value: itemData.posts },
+                { label: 'Rating', value: itemData.rating }
+            ];
+
+            statsToShow.forEach(stat => {
+                if (stat.value !== null && stat.value !== undefined && stat.value !== 'N/A') { // Only show if value exists
+                    const statDiv = document.createElement('div');
+                    statDiv.className = 'stat';
+                    statDiv.innerHTML = `
+                        <div class="stat-value">${stat.value}</div>
+                        <div class="stat-label">${stat.label}</div>
+                    `;
+                    modalStatsContainer.appendChild(statDiv);
+                }
+            });
+            // Hide container if no stats were added
+            modalStatsContainer.style.display = modalStatsContainer.hasChildNodes() ? 'flex' : 'none';
+
+
+            // Update Extra Info (Help Text / Commands)
+            modalExtraInfoContainer.innerHTML = ''; // Clear previous extra info
+            let extraInfoHtml = '';
+
+            if (itemData.helpText) {
+                 extraInfoHtml += `
+                    <div class="info-section">
+                        <h4>Quick Help</h4>
+                        <p>${itemData.helpText}</p>
+                    </div>
+                 `;
+            }
+
+            if (itemData.commands && itemData.commands.length > 0) {
+                extraInfoHtml += `
+                    <div class="info-section">
+                        <h4>Commands</h4>
+                        <ul class="command-list">
+                            ${itemData.commands.map(cmd => `<li><strong>${cmd.command}</strong> - ${cmd.description}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            modalExtraInfoContainer.innerHTML = extraInfoHtml;
+             // Hide container if no extra info was added
+            modalExtraInfoContainer.style.display = modalExtraInfoContainer.hasChildNodes() ? 'block' : 'none';
+
+            // Show modal
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden'; // Prevent background scroll
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            modal.classList.remove('open');
+            document.body.style.overflow = ''; // Restore background scroll
+        }
+
+        // Function to add ripple effect (keep your original logic or use this)
+        function addRippleEffect(element) {
+            element.addEventListener('click', function (e) {
+                const rect = element.getBoundingClientRect();
+                const ripple = document.createElement('span');
+                const diameter = Math.max(element.clientWidth, element.clientHeight);
+                const radius = diameter / 2;
+
+                ripple.style.width = ripple.style.height = `${diameter}px`;
+                ripple.style.left = `${e.clientX - rect.left - radius}px`;
+                ripple.style.top = `${e.clientY - rect.top - radius}px`;
+                ripple.classList.add('ripple-effect'); // Add a class for styling
+
+                // Check if a ripple is already active and remove it
+                 const existingRipple = element.querySelector(".ripple-effect");
+                 if (existingRipple) {
+                    existingRipple.remove();
+                 }
+
+                element.appendChild(ripple);
+
+                // Remove the ripple element after the animation finishes
                 setTimeout(() => {
-                    document.body.style.overflow = 'hidden';
-                }, 300);
+                   if (ripple) ripple.remove();
+                }, 600); // Match animation duration in CSS
+            });
+        }
+
+
+        // --- EVENT LISTENERS ---
+
+        // Tab Switching
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.getAttribute('data-tab');
+
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+
+                btn.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+
+                 if (telegramWebApp) telegramWebApp.HapticFeedback.selectionChanged(); // Haptic feedback for tab change
+                // NOTE: No need to re-render items here as they are rendered on load
             });
         });
 
-        // Close modal
-        closeModal.addEventListener('click', () => {
-            modal.classList.remove('open');
-            document.body.style.overflow = '';
-        });
+        // Modal Close Button
+        closeModalBtn.addEventListener('click', closeModal);
 
-        // Close modal when clicking outside of content
+        // Close modal when clicking background overlay
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
-                modal.classList.remove('open');
-                document.body.style.overflow = '';
+                closeModal();
             }
         });
 
-        // Handle back button for modal
-        window.addEventListener('popstate', () => {
-            if (modal.classList.contains('open')) {
-                modal.classList.remove('open');
-                document.body.style.overflow = '';
-            }
-        });
-
-        // Handle CTA button click
+        // Handle Modal Action Button Click
         actionBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            
-            // If Telegram WebApp is available, use its methods
+            e.preventDefault(); // Prevent default link behavior
+            const url = actionBtn.getAttribute('data-url');
+            if (!url) return;
+
             if (telegramWebApp) {
-                telegramWebApp.openTelegramLink(actionBtn.href);
+                 if (telegramWebApp.HapticFeedback) telegramWebApp.HapticFeedback.impactOccurred('medium');
+                telegramWebApp.openTelegramLink(url);
+                // Optionally close the modal after clicking
+                // closeModal();
             } else {
-                window.open(actionBtn.href, '_blank');
+                // Fallback for non-Telegram environment
+                window.open(url, '_blank');
             }
         });
+
+        // Close modal on hardware back button press (if supported by Telegram)
+        if (telegramWebApp && telegramWebApp.BackButton) {
+            telegramWebApp.BackButton.onClick(() => {
+                if (modal.classList.contains('open')) {
+                    closeModal();
+                     telegramWebApp.BackButton.hide();
+                } else {
+                    // If you want the back button to close the app entirely:
+                    // telegramWebApp.close();
+                }
+            });
+
+             // Show/hide back button based on modal state
+            const observer = new MutationObserver(() => {
+                if (modal.classList.contains('open')) {
+                     telegramWebApp.BackButton.show();
+                } else {
+                     telegramWebApp.BackButton.hide();
+                }
+            });
+            observer.observe(modal, { attributes: true, attributeFilter: ['class'] });
+        }
+
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Render initial items for both tabs
+            renderItems('channels');
+            renderItems('bots');
+
+            // Add ripple effect to initial tab buttons
+            tabBtns.forEach(addRippleEffect);
+            // Ripple for CTA button in modal
+            addRippleEffect(actionBtn);
+        });
+
     </script>
 </body>
 </html>
