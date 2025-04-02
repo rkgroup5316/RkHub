@@ -287,19 +287,25 @@ async function checkBotStatus(indicator) {
     const statusUrl = indicator.getAttribute('data-status-url');
     const hostname = getHostname(statusUrl); // Assuming getHostname helper exists
 
-    if (!statusUrl) {
+    if (!statusUrl || statusUrl.includes('your-real-bot-status-endpoint.com')) { // Added check for placeholder
         indicator.className = 'status-indicator status-error';
-        indicator.title = 'Missing status URL';
-        console.warn("Indicator found without a data-status-url attribute.");
-        return;
+        indicator.title = statusUrl.includes('your-real-bot-status-endpoint.com')
+            ? 'Placeholder URL needs replacing!'
+            : 'Missing status URL';
+        console.warn(`Indicator found with ${indicator.title} (${statusUrl})`);
+        // Log analytics for config error if needed
+        logAnalyticsEvent('bot_status_config_error', { url: statusUrl || 'missing', detail: indicator.title });
+        return; // Stop processing this invalid entry
     }
+
 
     indicator.className = 'status-indicator status-pending';
     indicator.title = `Checking ${hostname}...`;
 
     // Use AbortController for fetch timeout
     const controller = new AbortController();
-    const fetchTimeoutId = setTimeout(() => controller.abort(), CONFIG.statusCheckTimeout);
+    // Assign timeoutId outside the try block so it's accessible in the final catch
+    let fetchTimeoutId = setTimeout(() => controller.abort(), CONFIG.statusCheckTimeout);
 
     let isOnline = false;
     let checkMethod = 'unknown';
@@ -307,114 +313,86 @@ async function checkBotStatus(indicator) {
 
     try {
         // --- Strategy 1: Standard Fetch (Requires CORS configured on the server) ---
-        // checkMethod = 'fetch (standard)';
-        // console.log(`Checking ${hostname} using standard fetch...`);
-        // try {
-        //     const response = await fetch(statusUrl, {
-        //         method: 'HEAD', // Use HEAD for efficiency
-        //         cache: 'no-cache',
-        //         signal: controller.signal,
-        //         redirect: 'follow', // Important: follow redirects
-        //          // **NO** mode: 'no-cors' here!
-        //     });
+        // *** UNCOMMENT THIS BLOCK ***
+        checkMethod = 'fetch (standard)';
+        console.log(`Checking ${hostname} using standard fetch...`);
+        try {
+            const response = await fetch(statusUrl, {
+                method: 'HEAD', // Use HEAD for efficiency
+                cache: 'no-cache',
+                signal: controller.signal,
+                redirect: 'follow', // Important: follow redirects
+                 // **NO** mode: 'no-cors' here!
+            });
 
-        //     clearTimeout(fetchTimeoutId); // Clear fetch-specific timeout
+            clearTimeout(fetchTimeoutId); // Clear fetch-specific timeout
 
-        //     if (response.ok) { // Status 200-299?
-        //         isOnline = true;
-        //         console.log(`Standard fetch successful (status ${response.status}) for ${hostname}.`);
-        //     } else {
-        //         // Server responded, but with an error status (4xx, 5xx)
-        //         isOnline = false;
-        //         errorDetail = `Server responded with status ${response.status}`;
-        //         console.warn(`Standard fetch for ${hostname} returned non-OK status: ${response.status}`);
-        //     }
+            if (response.ok) { // Status 200-299?
+                isOnline = true;
+                console.log(`Standard fetch successful (status ${response.status}) for ${hostname}.`);
+            } else {
+                // Server responded, but with an error status (4xx, 5xx)
+                isOnline = false;
+                errorDetail = `Server responded with status ${response.status}`;
+                console.warn(`Standard fetch for ${hostname} returned non-OK status: ${response.status}`);
+            }
 
-        // } catch (fetchError) {
-        //     clearTimeout(fetchTimeoutId); // Clear timeout on error too
+        } catch (fetchError) {
+            clearTimeout(fetchTimeoutId); // Clear timeout on error too
 
-        //     if (fetchError.name === 'AbortError') {
-        //         // Fetch timed out via AbortController
-        //         console.warn(`Standard fetch timed out for ${hostname}.`);
-        //         isOnline = false;
-        //         errorDetail = 'Fetch timed out';
-        //         checkMethod = 'fetch (standard, timeout)';
-        //         // Don't proceed to Image Ping if fetch itself timed out
-        //         throw fetchError; // Propagate timeout to outer catch block
+            if (fetchError.name === 'AbortError') {
+                // Fetch timed out via AbortController
+                console.warn(`Standard fetch timed out for ${hostname}.`);
+                isOnline = false;
+                errorDetail = 'Fetch timed out';
+                checkMethod = 'fetch (standard, timeout)';
+                // Don't proceed to Image Ping if fetch itself timed out
+                throw fetchError; // Propagate timeout to outer catch block
 
-        //     } else if (fetchError instanceof TypeError) {
-        //         // Often indicates Network error OR CORS issue
-        //          console.warn(`Standard fetch failed for ${hostname}. Likely CORS or Network Error:`, fetchError.message);
-        //          // Assume offline unless we specifically try Image Ping
-        //          isOnline = false; // Default to offline on TypeError
-        //          errorDetail = `Workspace failed (Network/CORS?)`;
-        //          checkMethod = 'fetch (standard, failed)';
+            } else if (fetchError instanceof TypeError) {
+                // Often indicates Network error OR CORS issue
+                console.warn(`Standard fetch failed for ${hostname}. Likely CORS or Network Error:`, fetchError.message);
+                isOnline = false; // Default to offline on TypeError
+                errorDetail = `Workspace failed (Network/CORS?)`; // Keep original error
+                checkMethod = 'fetch (standard, failed)';
 
-        //          // If CORS is suspected, we *could* try the Image ping, but let's keep it simple first:
-        //          // Treat TypeError (Network/CORS failure) as OFFLINE for now.
-        //          // If you absolutely need to check behind CORS without server changes, uncomment Image Ping below.
+                // --- MODIFICATION: Attempt Image Ping as Fallback ---
+                console.log(`Standard fetch failed for ${hostname}. Falling back to Image Ping...`);
+                checkMethod = 'Image Ping'; // Update method tracking
+                try {
+                    // Await the result of the image ping promise
+                    isOnline = await imagePingCheck(statusUrl, hostname); // Call helper function
+                    if (isOnline) {
+                         // If image ping succeeds, clear the fetch error detail
+                         console.log(`Image Ping succeeded for ${hostname} after fetch failed.`);
+                         errorDetail = null; // Clear previous error detail
+                    } else {
+                         // If image ping also fails, update the error detail
+                         console.warn(`Image Ping fallback failed or timed out for ${hostname}.`);
+                         errorDetail = errorDetail + ' & Image ping failed/timed out';
+                    }
+                } catch (imgError) {
+                    console.warn(`Image Ping itself threw an error for ${hostname}:`, imgError);
+                    isOnline = false; // Stay offline
+                    errorDetail = errorDetail + ' & Image ping error';
+                }
+                // --- END IMAGE PING FALLBACK ---
 
-        //     } else {
-        //          // Other unexpected fetch errors
-        //          console.error(`Unexpected standard fetch error for ${hostname}:`, fetchError);
-        //          isOnline = false;
-        //          errorDetail = `Unexpected fetch error: ${fetchError.message}`;
-        //          checkMethod = 'fetch (standard, error)';
-        //     }
-        // }
-
-        /* --- Optional Strategy 2: Image Ping (If standard fetch fails due to CORS) ---
-           * Uncomment this section ONLY if you cannot configure CORS on the statusUrl server
-           * AND you accept the limitations of Image pinging.
-           * It's generally less reliable than a proper fetch check.*/
-
-        if (!isOnline && checkMethod.includes('failed') && errorDetail && errorDetail.includes('CORS')) {
-             checkMethod = 'Image Ping';
-             console.log(`Standard fetch failed due to suspected CORS for ${hostname}. Falling back to Image Ping...`);
-             isOnline = await new Promise((resolve) => {
-                 const img = new Image();
-                 let triggered = false; // Prevent double resolve
-
-                 const imgTimeoutId = setTimeout(() => {
-                     if (triggered) return;
-                     triggered = true;
-                     console.warn(`Image Ping timed out for ${hostname}`);
-                     img.onload = img.onerror = null;
-                     if (document.body.contains(img)) document.body.removeChild(img);
-                     errorDetail = 'Image ping timed out';
-                     resolve(false);
-                 }, CONFIG.statusCheckTimeout - 500); // Slightly less timeout for image
-
-                 img.onload = () => {
-                     if (triggered) return;
-                     triggered = true;
-                     clearTimeout(imgTimeoutId);
-                     console.log(`Image Ping success for ${hostname}`);
-                     img.onload = img.onerror = null;
-                      if (document.body.contains(img)) document.body.removeChild(img);
-                     resolve(true);
-                 };
-                 img.onerror = () => {
-                     if (triggered) return;
-                     triggered = true;
-                     clearTimeout(imgTimeoutId);
-                     console.warn(`Image Ping failed for ${hostname}`);
-                     img.onload = img.onerror = null;
-                     if (document.body.contains(img)) document.body.removeChild(img);
-                     errorDetail = 'Image ping failed';
-                     resolve(false);
-                 };
-
-                 const uniqueUrl = `${statusUrl}${statusUrl.includes('?') ? '&' : '?'}ping_img=${Date.now()}`;
-                 img.src = uniqueUrl;
-
-                 // Style and append to trigger load
-                 img.style.position = 'absolute'; img.style.left = '-9999px'; img.style.top = '-9999px';
-                 img.style.width = '1px'; img.style.height = '1px';
-                 document.body.appendChild(img);
-             });
+            } else {
+                // Other unexpected fetch errors
+                console.error(`Unexpected standard fetch error for ${hostname}:`, fetchError);
+                isOnline = false;
+                errorDetail = `Unexpected fetch error: ${fetchError.message}`;
+                checkMethod = 'fetch (standard, error)';
+                 // You might choose *not* to try image ping on unexpected errors
+                 // throw fetchError; // Or re-throw to handle in outer catch
+            }
         }
-        
+        // *** END OF UNCOMMENTED BLOCK ***
+
+
+        /* --- Image Ping block removed from here, integrated into catch block above --- */
+
 
         // --- Final Result Determination ---
         if (isOnline) {
@@ -432,22 +410,78 @@ async function checkBotStatus(indicator) {
 
     } catch (error) {
         // Catch errors propagated from fetch (like timeout) or other unexpected issues
-        clearTimeout(fetchTimeoutId); // Ensure timeout cleared on any error
+        // Make sure fetchTimeoutId is cleared if it hasn't been already
+         clearTimeout(fetchTimeoutId);
 
         console.error(`General error during status check for ${hostname}:`, error);
         indicator.className = 'status-indicator status-error'; // Use distinct error class
+        isOnline = false; // Ensure isOnline is false on general error
 
+        let finalErrorDetail = '';
         if (error.name === 'AbortError') {
             // This handles the timeout specifically
-            indicator.title = `${hostname} - Check Timed Out (${CONFIG.statusCheckTimeout}ms)`;
-             logAnalyticsEvent('bot_status_timeout', { url: hostname, timeout: CONFIG.statusCheckTimeout });
+            finalErrorDetail = `Check Timed Out (${CONFIG.statusCheckTimeout}ms)`;
+            indicator.title = `${hostname} - ${finalErrorDetail}`;
+            logAnalyticsEvent('bot_status_timeout', { url: hostname, timeout: CONFIG.statusCheckTimeout });
         } else {
-            indicator.title = `${hostname} - Check Error: ${error.message}`;
-            logAnalyticsEvent('bot_status_error', { url: hostname, error: error.toString(), method: checkMethod });
+            finalErrorDetail = `Check Error: ${error.message}`;
+            indicator.title = `${hostname} - ${finalErrorDetail}`;
+            logAnalyticsEvent('bot_status_error', { url: hostname, error: error.toString(), method: checkMethod }); // Log error
         }
+         // Also log the final offline status determined by the catch block
+         logAnalyticsEvent('bot_status_check', { url: hostname, status: 'offline', method: checkMethod, detail: finalErrorDetail });
+
     }
 }
 
+// --- Helper Function for Image Ping (Add this function outside checkBotStatus) ---
+function imagePingCheck(url, hostname) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        let triggered = false; // Prevent double resolve
+
+        const imgTimeoutId = setTimeout(() => {
+            if (triggered) return;
+            triggered = true;
+            console.warn(`Image Ping timed out for ${hostname}`);
+            img.onload = img.onerror = null; // Clean up handlers
+            if (img.parentNode) img.parentNode.removeChild(img); // Remove image if appended
+            resolve(false); // Resolve false on timeout
+        }, CONFIG.statusCheckTimeout - 500); // Slightly less timeout
+
+        img.onload = () => {
+            if (triggered) return;
+            triggered = true;
+            clearTimeout(imgTimeoutId);
+            // console.log(`Image Ping success for ${hostname}`); // Already logged where called
+            img.onload = img.onerror = null;
+            if (img.parentNode) img.parentNode.removeChild(img);
+            resolve(true); // Resolve true on success
+        };
+
+        img.onerror = (err) => { // Add error parameter for potential logging
+            if (triggered) return;
+            triggered = true;
+            clearTimeout(imgTimeoutId);
+             // console.warn(`Image Ping failed for ${hostname}`, err); // Already logged where called
+            img.onload = img.onerror = null;
+            if (img.parentNode) img.parentNode.removeChild(img);
+            resolve(false); // Resolve false on error
+        };
+
+        // Append cache-busting parameter
+        const uniqueUrl = `${url}${url.includes('?') ? '&' : '?'}ping_img_ts=${Date.now()}`;
+        img.src = uniqueUrl;
+
+        // Optional: Append image to DOM to ensure loading starts in all browsers
+        // Can be hidden
+         img.style.position = 'absolute';
+         img.style.left = '-9999px';
+         img.style.width = '1px';
+         img.style.height = '1px';
+         document.body.appendChild(img); // Append, then remove in handlers
+    });
+}
 
 // --- Analytics ---
 function logAnalyticsEvent(eventName, eventData = {}) {
