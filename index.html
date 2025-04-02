@@ -15,7 +15,7 @@
             <img src="https://raw.githubusercontent.com/RKgroupkg/RKGROUP/refs/heads/main/Assets/Logo/Your%20paragraph%20text.png" alt="Profile Image" class="profile-img">
             <h1>Rkgroup</h1>
             <h2>Your Professional Title</h2>
-            <p>Welcome to my Telegram Mini App! Explore my channels and bots below. Click on any item for more details.</p>
+            <p>Welcome to my Telegram Mini App! Explore my channels and bot below. Click on any item for more details.</p>
             <div class="social-links">
                 <a href="#" class="social-btn" aria-label="Facebook">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"> <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path> </svg>
@@ -34,7 +34,7 @@
 
         <div class="tabs">
             <button class="tab-btn active ripple" data-tab="channels">Channels</button>
-            <button class="tab-btn ripple" data-tab="bots">Bots</button>
+            <button class="tab-btn ripple" data-tab="bot">bot</button>
         </div>
 
         <div class="tab-content active" id="channels">
@@ -42,7 +42,7 @@
                 </div>
         </div>
 
-        <div class="tab-content" id="bots">
+        <div class="tab-content" id="bot">
             <div class="item-list">
                 </div>
         </div>
@@ -67,7 +67,7 @@
     </div>
 
     <script>
-        // --- DATA FOR CHANNELS AND BOTS ---
+        // --- DATA FOR CHANNELS AND bot ---
         // Structure: { id: { properties... } }
         // NEW: Added 'type', 'shortDesc', 'helpText', 'commands' fields
         const data = {
@@ -114,7 +114,7 @@
                 }
                 // Add more channels here by copying the structure
             },
-            bots: {
+            bot: {
                 bot1: {
                     type: 'bot',
                     title: "TaskMaster Bot",
@@ -128,8 +128,8 @@
                         { command: "/viewtasks", description: "See your active tasks." },
                         { command: "/help", description: "Show this help message." }
                     ],
-                    members: "8.3K Users", // Use 'Users' or 'Active Users' for bots
-                    posts: null, // Bots don't have posts typically
+                    members: "8.3K Users", // Use 'Users' or 'Active Users' for bot
+                    posts: null, // bot don't have posts typically
                     rating: "4.7",
                     action: "Start Bot",
                     actionUrl: "https://t.me/your_bot_1_bot" // Placeholder - REPLACE (Bot links usually end in _bot)
@@ -172,7 +172,7 @@
                     action: "Add to Group", // Action text can vary
                     actionUrl: "https://t.me/your_bot_3_bot?startgroup=true" // Placeholder - REPLACE
                 }
-                 // Add more bots here by copying the structure
+                 // Add more bot here by copying the structure
             }
         };
 
@@ -435,7 +435,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Render initial items for both tabs
             renderItems('channels');
-            renderItems('bots');
+            renderItems('bot');
 
             // Add ripple effect to initial tab buttons
             tabBtns.forEach(addRippleEffect);
