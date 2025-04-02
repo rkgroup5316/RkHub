@@ -15,7 +15,7 @@
             <img src="https://raw.githubusercontent.com/RKgroupkg/RKGROUP/refs/heads/main/Assets/Logo/Your%20paragraph%20text.png" alt="Profile Image" class="profile-img">
             <h1>Rkgroup</h1>
             <h2>Your Professional Title</h2>
-            <p>Welcome to my Telegram Mini App! Explore my channels and bot below. Click on any item for more details.</p>
+            <p>Welcome to my Telegram Mini App! Explore my channel and bot below. Click on any item for more details.</p>
             <div class="social-links">
                 <a href="#" class="social-btn" aria-label="Facebook">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"> <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path> </svg>
@@ -33,11 +33,11 @@
         </div>
 
         <div class="tabs">
-            <button class="tab-btn active ripple" data-tab="channels">Channels</button>
+            <button class="tab-btn active ripple" data-tab="channel">channel</button>
             <button class="tab-btn ripple" data-tab="bot">bot</button>
         </div>
 
-        <div class="tab-content active" id="channels">
+        <div class="tab-content active" id="channel">
             <div class="item-list">
                 </div>
         </div>
@@ -67,11 +67,11 @@
     </div>
 
     <script>
-        // --- DATA FOR CHANNELS AND bot ---
+        // --- DATA FOR channel AND bot ---
         // Structure: { id: { properties... } }
         // NEW: Added 'type', 'shortDesc', 'helpText', 'commands' fields
         const data = {
-            channels: {
+            channel: {
                 channel1: {
                     type: 'channel',
                     title: "Tech Insights",
@@ -112,7 +112,7 @@
                     action: "Join Now",
                     actionUrl: "https://t.me/your_channel_3" // Placeholder - REPLACE
                 }
-                // Add more channels here by copying the structure
+                // Add more channel here by copying the structure
             },
             bot: {
                 bot1: {
@@ -434,7 +434,7 @@
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
             // Render initial items for both tabs
-            renderItems('channels');
+            renderItems('channel');
             renderItems('bot');
 
             // Add ripple effect to initial tab buttons
