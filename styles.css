@@ -1,189 +1,310 @@
-/* Keep all your existing styles */
+/**
+ * styles.css
+ * Styles for the Telegram Mini App Showcase
+ * Includes light/dark theme support and modular components.
+ */
+
 :root {
-    --primary: #2AABEE;
-    --primary-light: rgba(42, 171, 238, 0.1);
-    --secondary: #229ED9; /* Slightly darker for hover */
-    --text: #333333;
-    --text-secondary: #666666;
-    --text-tertiary: #888888;
-    --bg-light: #F4F7F9; /* Slightly softer light background */
-    --bg-card: #FFFFFF;
-    --border: #EAEAEA; /* Lighter border */
-    --shadow: 0 3px 8px rgba(0, 0, 0, 0.04); /* Softer shadow */
-    --shadow-hover: 0 6px 12px rgba(0, 0, 0, 0.07);
-    --success: #34C759;
-    --danger: #FF3B30;
-    --warning: #FF9500;
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Color Palette - Light Theme */
+    --primary: #2AABEE;             /* Telegram Blue */
+    --primary-light: rgba(42, 171, 238, 0.1); /* Lighter shade for backgrounds */
+    --secondary: #229ED9;           /* Slightly darker blue for hover */
+    --text: #212121;                 /* Dark grey for primary text */
+    --text-secondary: #616161;       /* Medium grey for less important text */
+    --text-tertiary: #9E9E9E;       /* Light grey for hints and tertiary info */
+    --bg-light: #F4F7F9;             /* Very light grey for main background */
+    --bg-card: #FFFFFF;             /* White for cards and modals */
+    --border: #EAEAEA;               /* Light grey for borders and dividers */
+    --shadow: 0 3px 8px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+    --shadow-hover: 0 6px 12px rgba(0, 0, 0, 0.08); /* Slightly larger shadow on hover */
+    --success: #34C759;             /* Green for success/new badge */
+    --danger: #FF3B30;              /* Red for errors/warnings */
+    --warning: #FF9500;             /* Orange for warnings */
+
+    /* Transitions & Timings */
+    --transition-fast: all 0.2s ease-out;
+    --transition-normal: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Font */
+    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
-/* Dark Theme Variables (Using data attribute now) */
+/* Dark Theme Variables (Applied via JS using `data-theme="dark"`) */
 html[data-theme='dark'] {
-    --primary: #38B7FF; /* Adjust dark theme primary */
-    --primary-light: rgba(56, 183, 255, 0.1);
-    --secondary: #4FC3FF;
-    --text: #EAEAEA;
-    --text-secondary: #B0B0B0;
-    --text-tertiary: #888888;
-    --bg-light: #18191A; /* Dark background */
-    --bg-card: #242526; /* Dark card background */
-    --border: #3A3A3C; /* Dark border */
-    --shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-    --shadow-hover: 0 6px 12px rgba(0, 0, 0, 0.2);
+    --primary: #38B7FF;             /* Brighter blue for dark mode */
+    --primary-light: rgba(56, 183, 255, 0.12);
+    --secondary: #4FC3FF;           /* Lighter hover blue */
+    --text: #EAEAEA;                 /* Light grey/off-white text */
+    --text-secondary: #B0B0B0;       /* Lighter medium grey */
+    --text-tertiary: #888888;       /* Keep tertiary grey */
+    --bg-light: #18191A;             /* Very dark grey background */
+    --bg-card: #242526;             /* Dark grey for cards */
+    --border: #3A3A3C;               /* Darker border */
+    --shadow: 0 3px 8px rgba(0, 0, 0, 0.18); /* Dark mode shadow */
+    --shadow-hover: 0 6px 12px rgba(0, 0, 0, 0.25);
+    --success: #30D158;             /* Brighter green */
+    --danger: #FF453A;              /* Brighter red */
+    --warning: #FF9F0A;             /* Brighter orange */
 }
 
-
+/* Global Reset & Base Styles */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
     -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+    outline-color: var(--primary); /* Better focus outline color */
 }
 
 body {
     background-color: var(--bg-light);
     color: var(--text);
     line-height: 1.6;
-    /* padding-bottom: 80px; /* May not be needed if content scrolls */
     font-size: 15px;
     transition: background-color 0.3s, color 0.3s; /* Smooth theme transition */
+    -webkit-font-smoothing: antialiased; /* Better font rendering on WebKit */
+    -moz-osx-font-smoothing: grayscale; /* Better font rendering on Firefox */
 }
 
+/* Main Container */
 .container {
-    max-width: 600px; /* Slightly wider max-width */
+    max-width: 600px; /* Allow slightly wider content */
     margin: 0 auto;
-    padding: 16px 12px 30px 12px; /* Add more bottom padding */
+    padding: 20px 15px 40px 15px; /* Consistent padding */
 }
 
-/* Profile Card Styling - Minor Adjustments */
+/* Profile Card Styling */
 .profile {
-    /* Existing styles */
-    padding: 28px 24px;
-    border-radius: 20px; /* Slightly more rounded */
-    margin-bottom: 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px; /* More space below profile */
+    padding: 30px 25px;
+    background-color: var(--bg-card);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    transition: var(--transition-normal);
+}
+
+.profile:hover {
+    transform: translateY(-4px); /* Slightly more lift */
+    box-shadow: var(--shadow-hover);
 }
 
 .profile-img {
-    width: 95px; /* Slightly larger */
-    height: 95px;
-    border: 3px solid var(--primary); /* Thicker border */
-    margin-bottom: 18px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary);
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for image */
 }
 
 .profile h1 {
-    font-size: 1.5rem; /* Slightly larger */
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--text);
 }
 
 .profile h2 {
-    font-size: 1rem;
-    margin-bottom: 16px;
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 18px;
 }
 
 .profile p {
     font-size: 0.98rem;
-    margin-bottom: 20px;
+    color: var(--text-secondary);
+    max-width: 420px;
+    margin-bottom: 22px;
+    line-height: 1.55;
 }
 
-/* Social Links - Minor Adjustments */
+/* Social Links */
 .social-links {
-    gap: 16px; /* Slightly more space */
+    display: flex;
+    gap: 18px; /* More space between icons */
+    margin-top: 8px; /* Ensure spacing from text */
 }
 
 .social-btn {
-    width: 40px; /* Slightly larger */
-    height: 40px;
-    background-color: var(--primary-light); /* Use light variable */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-color: var(--primary-light);
+    color: var(--primary); /* Set color for SVG stroke fallback */
+    transition: var(--transition-fast);
+    text-decoration: none;
 }
+
 .social-btn svg {
-     width: 20px; /* Adjust icon size if needed */
+     width: 20px;
      height: 20px;
      fill: var(--primary); /* Use fill for solid icons */
+     transition: fill 0.2s ease-out; /* Transition fill color */
 }
 
 .social-btn:hover {
     background-color: var(--primary);
-    transform: translateY(-2px) scale(1.03); /* Add slight lift */
-}
-.social-btn:hover svg {
-    fill: white;
+    transform: translateY(-2px) scale(1.05); /* Add subtle lift */
 }
 
-/* Tabs Navigation - Minor Adjustments */
+.social-btn:hover svg {
+    fill: var(--bg-card); /* White icon on hover */
+}
+
+/* Tabs Navigation */
 .tabs {
-    border-radius: 16px; /* Match profile card */
-    margin-bottom: 24px;
+    display: flex;
+    background-color: var(--bg-card);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    margin-bottom: 25px;
+    position: sticky; /* Make tabs sticky */
+    top: 10px;       /* Adjust spacing from top */
+    z-index: 10;      /* Ensure tabs stay above list content */
+    border: 1px solid var(--border); /* Subtle border */
 }
 
 .tab-btn {
-    padding: 15px 10px; /* Slightly more padding */
-    font-size: 0.95rem;
-    font-weight: 500; /* Make inactive slightly bolder */
-    position: relative; /* Ensure relative positioning for pseudo-elements */
-    border: none; /* Explicitly remove border */
-    background: none; /* Explicitly remove background */
+    flex: 1;
+    padding: 16px 10px;
+    background: none;
+    border: none;
+    font-size: 0.98rem;
+    font-weight: 500;
+    color: var(--text-secondary);
     cursor: pointer;
+    transition: color 0.2s ease-out, background-color 0.2s ease-out;
+    position: relative;
+    border-radius: 0; /* Ensure no button radius interferes */
+}
+.tab-btn:not(:last-child) {
+    border-right: 1px solid var(--border); /* Separator */
 }
 
 .tab-btn.active {
     color: var(--primary);
-    font-weight: 600; /* Make active bolder */
+    font-weight: 600; /* Bolder active tab */
+    background-color: var(--primary-light); /* Highlight active tab background */
 }
 
+/* Optional: Underline indicator (alternative to background highlight) */
+/*
 .tab-btn.active::after {
-    /* Existing styles */
-    height: 3px; /* Slightly thicker indicator */
-    border-radius: 3px; /* Rounded indicator */
-    left: 25%; /* Center better */
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 25%;
     width: 50%;
+    height: 3px;
+    background-color: var(--primary);
+    border-radius: 3px 3px 0 0;
     transition: all 0.3s ease;
 }
+*/
 
-/* Item Cards - Minor Adjustments */
+/* Tab Content Area */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.4s ease; /* Slightly longer fade */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Item Cards */
 .item-list {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 14px; /* Slightly more gap */
+    grid-template-columns: 1fr; /* Single column layout */
+    gap: 15px; /* Space between cards */
 }
 
 .item-card {
-    /* Existing styles */
-    padding: 16px;
-    border-radius: 16px; /* Match tabs/profile */
-    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out; /* Smoother hover */
+    display: flex;
+    align-items: center;
+    padding: 18px; /* More padding */
+    background-color: var(--bg-card);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    cursor: pointer;
+    border: 1px solid var(--border); /* Add border to cards */
+}
+
+.item-card:hover {
+    transform: translateY(-3px) scale(1.01); /* Subtle scale and lift */
+    box-shadow: var(--shadow-hover);
 }
 
 .item-card:active {
-     transform: scale(0.98); /* Add active state */
+     transform: scale(0.98); /* Press effect */
      box-shadow: var(--shadow); /* Keep shadow on active */
 }
 
 .item-img {
-    width: 58px; /* Slightly larger image */
-    height: 58px;
-    border-radius: 12px; /* More rounded image */
-    margin-right: 16px;
-    background-color: var(--border); /* Placeholder background */
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    object-fit: cover;
+    margin-right: 18px;
+    background-color: var(--bg-light); /* Placeholder bg */
+    flex-shrink: 0; /* Prevent image from shrinking */
+}
+
+.item-info {
+    flex: 1;
+    min-width: 0; /* Prevent text overflow issues in flex */
 }
 
 .item-info h3 {
-    font-size: 1.08rem;
-    display: flex; /* Use flex to align badge */
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--text);
+    display: flex; /* For badge alignment */
     align-items: center;
+    white-space: nowrap; /* Prevent title wrapping */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Add ellipsis if title is too long */
 }
 
 .item-info p {
-    font-size: 0.88rem; /* Slightly larger description */
-    color: var(--text-secondary); /* Use secondary text color */
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Limit description to 2 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.45;
 }
 
-.chevron svg { /* Target SVG inside chevron */
-     width: 20px; /* Adjust chevron size */
-     height: 20px;
-     stroke-width: 2.5; /* Make chevron slightly bolder */
-     color: var(--text-tertiary);
-     transition: var(--transition);
+.chevron {
+    margin-left: 12px;
+    color: var(--text-tertiary);
+    flex-shrink: 0; /* Prevent chevron from shrinking */
+}
+
+.chevron svg {
+     width: 22px;
+     height: 22px;
+     stroke-width: 2.5; /* Bolder chevron */
+     transition: transform 0.2s ease-out, color 0.2s ease-out;
 }
 
 .item-card:hover .chevron svg {
@@ -191,181 +312,246 @@ body {
     color: var(--primary);
 }
 
-/* Modal Styling - Refinements */
+/* Modal Styling */
 .modal {
-    /* Existing styles */
-    background-color: rgba(0, 0, 0, 0.5); /* Slightly darker overlay */
-    backdrop-filter: blur(4px); /* More blur */
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    position: fixed;
+    inset: 0; /* Replaces top, left, width, height */
+    background-color: rgba(0, 0, 0, 0.55); /* Darker overlay */
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; /* Align modal to bottom */
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-normal), visibility var(--transition-normal);
+    backdrop-filter: blur(5px); /* More blur */
+}
+
+.modal.open {
+    opacity: 1;
+    visibility: visible;
 }
 
 .modal-content {
-    /* Existing styles */
-    border-radius: 24px 24px 0 0; /* More rounded top corners */
-    padding: 18px 18px 28px; /* Adjust padding slightly */
-    box-shadow: 0 -5px 25px rgba(0,0,0,0.1); /* Add shadow */
-    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1); /* Keep nice ease */
+    width: 100%;
+    max-width: 600px; /* Match container width */
+    background-color: var(--bg-card);
+    border-radius: 24px 24px 0 0; /* More rounded top */
+    padding: 20px 20px 30px;
+    transform: translateY(100%); /* Start off-screen */
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    max-height: 90vh; /* Limit height */
+    overflow-y: auto; /* Enable scrolling within modal */
+    box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.1);
 }
 
 html[data-theme='dark'] .modal-content {
-    box-shadow: 0 -5px 25px rgba(0,0,0,0.3);
+    box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.3);
 }
 
+.modal.open .modal-content {
+    transform: translateY(0); /* Slide in */
+}
 
 .modal-header {
-    /* Existing styles */
-    padding-bottom: 16px; /* More padding */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 20px;
+    padding-bottom: 18px;
     border-bottom: 1px solid var(--border);
+    position: sticky; /* Keep header visible when scrolling modal */
+    top: -20px; /* Adjust to align with padding */
+    background-color: var(--bg-card); /* Match content background */
+    z-index: 1; /* Ensure it's above scrolling content */
+    margin: -20px -20px 20px -20px; /* Overlap padding */
+    padding: 20px 20px 18px 20px; /* Restore padding */
 }
 
+
 .modal-title {
-    font-size: 1.3rem; /* Larger title */
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--text);
 }
 
 .close-btn {
-    /* Existing styles */
-     color: var(--text-secondary);
+    background: none;
+    border: none;
+    font-size: 1.5rem; /* Larger icon */
+    color: var(--text-secondary);
+    cursor: pointer;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
 }
 
 .close-btn:hover {
-    background-color: var(--border); /* Use border color for hover bg */
+    background-color: var(--border);
     color: var(--text);
 }
 
 .modal-img {
-    height: 200px; /* Slightly taller image */
-    border-radius: 16px; /* Match card radius */
-    margin-bottom: 20px;
-    background-color: var(--border); /* Placeholder bg */
+    width: 100%;
+    height: 210px; /* Taller modal image */
+    object-fit: cover;
+    border-radius: 16px;
+    margin-bottom: 22px;
+    background-color: var(--bg-light); /* Placeholder bg */
+    display: block; /* Remove extra space below image */
 }
 
 .modal-description {
-    font-size: 0.98rem; /* Slightly larger text */
-    margin-bottom: 22px;
+    font-size: 1rem; /* Larger description text */
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 25px;
 }
 
-/* Stats Section - Refinements */
+/* Stats Section */
 .modal-stats {
-    display: flex; /* Keep flex */
-    gap: 10px; /* Adjust gap */
-    margin-bottom: 24px;
-    flex-wrap: wrap; /* Allow wrapping if needed */
+    display: flex;
+    gap: 12px;
+    margin-bottom: 25px;
+    flex-wrap: wrap; /* Allow wrapping */
 }
 
 .stat {
-    /* Existing styles */
-    flex: 1 1 auto; /* Allow flex-grow, flex-shrink, set basis */
-    background-color: var(--bg-light); /* Match body bg */
-    padding: 14px 12px;
-    border-radius: 14px; /* Slightly more rounded */
-    min-width: 80px; /* Ensure minimum width */
+    flex: 1 1 auto; /* Grow and shrink as needed */
+    background-color: var(--bg-light);
+    padding: 15px 12px;
+    border-radius: 14px;
+    text-align: center;
+    min-width: 90px; /* Ensure stats don't get too small */
 }
 
 .stat-value {
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     font-weight: 600;
-    margin-bottom: 4px;
     color: var(--primary);
+    margin-bottom: 5px;
+    line-height: 1.2;
 }
 
 .stat-label {
-    font-size: 0.78rem; /* Slightly smaller label */
-    color: var(--text-secondary); /* Use secondary color */
-    text-transform: uppercase; /* Uppercase labels */
-    letter-spacing: 0.3px;
+    font-size: 0.75rem; /* Smaller label */
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
 }
 
-/* --- NEW STYLES for Extra Info Section --- */
+/* Extra Info Section (Help/Commands) */
 .modal-extra-info {
-    margin-bottom: 24px;
-    padding-top: 15px;
+    margin-top: 15px; /* Add space above if stats are present */
+    margin-bottom: 28px;
+    padding-top: 20px;
     border-top: 1px solid var(--border); /* Separator line */
 }
+/* Hide separator if no stats were shown */
+.modal-stats:empty + .modal-extra-info {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+}
+
 
 .info-section {
-    margin-bottom: 18px;
+    margin-bottom: 20px;
 }
 .info-section:last-child {
     margin-bottom: 0;
 }
 
 .info-section h4 {
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-weight: 600;
     color: var(--text);
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
 .info-section p {
-     font-size: 0.95rem;
+     font-size: 0.98rem;
      color: var(--text-secondary);
-     line-height: 1.5;
+     line-height: 1.55;
 }
 
 .command-list {
-    list-style: none; /* Remove default bullets */
+    list-style: none;
     padding-left: 0;
+    margin-top: 5px;
 }
 
 .command-list li {
-    font-size: 0.95rem;
+    font-size: 0.98rem;
     color: var(--text-secondary);
-    margin-bottom: 6px;
-    line-height: 1.4;
+    margin-bottom: 8px;
+    line-height: 1.5;
 }
 
 .command-list li strong {
-    color: var(--text); /* Make command stand out */
+    color: var(--text);
     font-weight: 500;
-    background-color: var(--bg-light); /* Subtle background for command */
-    padding: 2px 5px;
-    border-radius: 5px;
-    margin-right: 5px;
-    display: inline-block; /* Ensure background wraps nicely */
+    background-color: var(--primary-light); /* Use primary light for command bg */
+    padding: 3px 7px;
+    border-radius: 6px;
+    margin-right: 6px;
+    display: inline-block;
+    font-family: 'Courier New', Courier, monospace; /* Monospace font for commands */
+    font-size: 0.9em; /* Slightly smaller than surrounding text */
 }
-/* --- END NEW STYLES --- */
 
+html[data-theme='dark'] .command-list li strong {
+     background-color: rgba(56, 183, 255, 0.18); /* Adjust dark theme command bg */
+}
 
-/* CTA Button - Refinements */
+/* CTA Button */
 .cta-btn {
-    /* Existing styles */
-    padding: 14px 20px; /* Slightly taller */
-    border-radius: 14px; /* Match stats */
-    font-size: 1rem;
-    letter-spacing: 0.4px; /* More spacing */
-    box-shadow: 0 4px 12px rgba(42, 171, 238, 0.25); /* Slightly stronger shadow */
+    display: block; /* Make button full width */
+    width: 100%;
+    background-color: var(--primary);
+    color: white;
+    padding: 16px 20px; /* Taller button */
+    border-radius: 14px;
+    font-weight: 600; /* Bolder text */
+    text-decoration: none;
+    text-align: center;
+    transition: var(--transition-fast);
+    border: none;
+    cursor: pointer;
+    font-size: 1.05rem;
+    letter-spacing: 0.3px;
+    box-shadow: 0 4px 14px rgba(42, 171, 238, 0.3);
 }
 
 .cta-btn:hover {
     background-color: var(--secondary);
-    transform: translateY(-2px); /* More lift on hover */
-    box-shadow: 0 6px 15px rgba(42, 171, 238, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(42, 171, 238, 0.35);
 }
 
 .cta-btn:active {
-    transform: translateY(0); /* Reset transform on active */
-    box-shadow: 0 2px 6px rgba(42, 171, 238, 0.2);
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(42, 171, 238, 0.25);
 }
 
-/* Badge Styling - Keep as is or adjust colors */
+/* Badge Styling */
 .badge {
-    background-color: var(--success); /* Use success color for NEW */
+    display: inline-block;
+    background-color: var(--success); /* Green for 'NEW' */
     color: white;
-    font-size: 0.65rem; /* Slightly smaller */
-    font-weight: 600; /* Bolder */
-    padding: 3px 8px; /* Adjust padding */
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 3px 9px;
     border-radius: 10px; /* Pill shape */
-    margin-left: 8px; /* More space */
-    vertical-align: middle; /* Align better with text */
-    /* Keep pulse animation or remove if distracting */
-    /* animation: pulse 1.8s infinite cubic-bezier(0.4, 0, 0.6, 1); */
+    margin-left: 8px;
+    vertical-align: middle; /* Align better with title text */
 }
 
-/* Remove pulse animation if not desired */
-/* @keyframes pulse { ... } */
-
-/* Ripple Effect (Using dedicated class now) */
+/* Ripple Effect */
 .ripple {
     position: relative;
     overflow: hidden;
@@ -374,14 +560,14 @@ html[data-theme='dark'] .modal-content {
 .ripple-effect {
     position: absolute;
     border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.4); /* Ripple color */
+    background-color: rgba(0, 0, 0, 0.1); /* Ripple color */
     transform: scale(0);
     animation: ripple-animation 0.6s linear;
-    pointer-events: none; /* Important */
+    pointer-events: none;
 }
 
 html[data-theme='dark'] .ripple-effect {
-     background-color: rgba(255, 255, 255, 0.2); /* Dark theme ripple */
+     background-color: rgba(255, 255, 255, 0.15); /* Dark theme ripple */
 }
 
 
@@ -390,4 +576,18 @@ html[data-theme='dark'] .ripple-effect {
         transform: scale(4);
         opacity: 0;
     }
+}
+
+/* Optional: Add focus styles for accessibility */
+a:focus-visible, button:focus-visible, .item-card:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px var(--primary-light); /* Focus ring */
+    border-radius: inherit; /* Match element's radius */
+}
+.item-card:focus-visible {
+    border-radius: 16px; /* Explicitly set for item-card */
+}
+.tab-btn:focus-visible {
+    border-radius: 0; /* Remove radius for tab button focus */
 }
