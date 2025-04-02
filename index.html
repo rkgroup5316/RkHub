@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Rkgroup Hub</title>
+    <link rel="stylesheet" href="style.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1 id="page-title">Rkgroup Hub</h1>
+        </header>
+
+        <main class="app-content">
+            <section id="page-about" class="page-content active-page">
+                <div class="info-card animated">
+                    <div class="card-icon"><i class="fas fa-info-circle icon pulse"></i></div>
+                    <div class="card-content">
+                        <h2>About Rkgroup</h2>
+                        <p>
+                            Welcome! Rkgroup focuses on creating helpful Telegram bots and communities.
+                            Explore our channels and check the status of our bots.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="info-card animated">
+                    <div class="card-icon"><i class="fas fa-book-open icon pulse"></i></div>
+                    <div class="card-content">
+                        <h2>How it Works</h2>
+                        <p>
+                            Use the tabs below to navigate. Bot status is checked periodically.
+                        </p>
+                        <div class="status-legend">
+                            <div class="status-item">
+                                <span class="status-indicator status-online"></span>
+                                <span>Online</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-indicator status-offline"></span>
+                                <span>Offline/Error</span>
+                            </div>
+                             <div class="status-item">
+                                <span class="status-indicator status-error"></span> <span>Check Failed</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-indicator status-pending"></span>
+                                <span>Checking</span>
+                            </div>
+                        </div>
+                        <p class="disclaimer">
+                            Bot status check uses methods like HEAD requests or Image pings. Server reachability is checked, but CORS configuration on the server side can affect results.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="page-channels" class="page-content">
+                <div class="info-card full-width animated">
+                    <div class="card-header">
+                        <div class="card-icon"><i class="fas fa-bullhorn icon"></i></div>
+                        <h2>Our Channels</h2>
+                    </div>
+                    <ul class="link-list" id="channel-list">
+                        <li class="skeleton-loader">Loading channels...</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="page-bots" class="page-content">
+                <div class="info-card full-width animated">
+                    <div class="card-header">
+                        <div class="card-icon"><i class="fas fa-robot icon"></i></div>
+                        <h2>Our Bots Status</h2>
+                    </div>
+                    <ul class="link-list" id="bot-list">
+                        <li class="skeleton-loader">Loading bots...</li>
+                    </ul>
+                    <button id="refresh-button" class="styled-button">
+                        <i class="fas fa-sync-alt"></i>
+                        <span>Refresh Status</span>
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <nav class="app-nav">
+            <button class="nav-item active" data-page="page-about">
+                <div class="nav-icon"><i class="fas fa-home"></i></div>
+                <span>About</span>
+            </button>
+            <button class="nav-item" data-page="page-channels">
+                <div class="nav-icon"><i class="fas fa-bullhorn"></i></div>
+                <span>Channels</span>
+            </button>
+            <button class="nav-item" data-page="page-bots">
+                <div class="nav-icon"><i class="fas fa-robot"></i></div>
+                <span>Bots</span>
+            </button>
+        </nav>
+    </div>
+
+    <script src="ping.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
