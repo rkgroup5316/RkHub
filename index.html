@@ -2,18 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Your Telegram Mini App</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/telegram-web-app/6.7.0/telegram-web-app.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --primary: #2AABEE;
-            --secondary: #229ED9;
-            --text: #333333;
-            --bg-light: #F8F9FA;
-            --bg-card: #FFFFFF;
-            --border: #E5E5E5;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            /* Define fallbacks for colors if Telegram variables aren't available */
+            --tg-theme-bg-color: #F8F9FA;
+            --tg-theme-text-color: #212529;
+            --tg-theme-hint-color: #6c757d;
+            --tg-theme-link-color: #007bff;
+            --tg-theme-button-color: #007bff;
+            --tg-theme-button-text-color: #ffffff;
+            --tg-theme-secondary-bg-color: #ffffff;
+
+            /* Custom Variables based on Telegram (or fallbacks) */
+            --app-bg-color: var(--tg-theme-bg-color, #F8F9FA);
+            --app-text-color: var(--tg-theme-text-color, #212529);
+            --app-hint-color: var(--tg-theme-hint-color, #6c757d);
+            --app-primary-color: var(--tg-theme-button-color, #2AABEE);
+            --app-primary-text-color: var(--tg-theme-button-text-color, #FFFFFF);
+            --app-secondary-bg-color: var(--tg-theme-secondary-bg-color, #FFFFFF);
+            --app-border-color: color-mix(in srgb, var(--app-bg-color) 80%, var(--app-hint-color));
+            --app-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+            --app-primary-gradient: linear-gradient(135deg, var(--app-primary-color) 0%, color-mix(in srgb, var(--app-primary-color) 80%, black) 100%);
         }
 
         * {
@@ -21,36 +33,45 @@
             padding: 0;
             box-sizing: border-box;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+        }
+
+        html {
+             /* Smooth scrolling */
+            scroll-behavior: smooth;
         }
 
         body {
-            background-color: var(--bg-light);
-            color: var(--text);
+            background-color: var(--app-bg-color);
+            color: var(--app-text-color);
             line-height: 1.6;
-            padding-bottom: 80px;
+            padding-bottom: 80px; /* Space for potential main button */
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .container {
-            max-width: 500px;
+            max-width: 600px; /* Slightly wider for better spacing */
             margin: 0 auto;
-            padding: 20px 15px;
+            padding: 25px 20px;
         }
 
+        /* Profile Section */
         .profile {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 30px;
-            padding: 25px 20px;
-            background-color: var(--bg-card);
-            border-radius: 16px;
-            box-shadow: var(--shadow);
+            margin-bottom: 35px;
+            padding: 30px 25px;
+            background-color: var(--app-secondary-bg-color);
+            border-radius: 20px; /* Softer radius */
+            box-shadow: var(--app-shadow);
             text-align: center;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .profile:hover {
-            transform: translateY(-5px);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.09);
         }
 
         .profile-img {
@@ -58,34 +79,36 @@
             height: 100px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid var(--primary);
-            margin-bottom: 15px;
+            border: 4px solid var(--app-primary-color);
+            margin-bottom: 18px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         .profile h1 {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             font-weight: 600;
-            margin-bottom: 5px;
-            color: var(--primary);
+            margin-bottom: 6px;
+            color: var(--app-primary-color);
         }
 
         .profile h2 {
             font-size: 1rem;
             font-weight: 500;
-            color: #666;
-            margin-bottom: 15px;
+            color: var(--app-hint-color);
+            margin-bottom: 18px;
         }
 
         .profile p {
             font-size: 0.95rem;
-            color: #555;
-            max-width: 400px;
-            margin-bottom: 20px;
+            color: var(--app-text-color);
+            opacity: 0.9;
+            max-width: 450px;
+            margin-bottom: 25px;
         }
 
         .social-links {
             display: flex;
-            gap: 12px;
+            gap: 15px;
             margin-top: 5px;
         }
 
@@ -93,158 +116,217 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
-            background-color: var(--primary);
-            color: white;
-            font-size: 20px;
-            transition: all 0.2s ease;
+            background: var(--app-primary-gradient);
+            color: var(--app-primary-text-color);
+            font-size: 20px; /* Icon size */
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy transition */
+            text-decoration: none;
+        }
+        .social-btn svg {
+             width: 22px; /* Explicit icon sizing */
+             height: 22px;
         }
 
         .social-btn:hover {
-            background-color: var(--secondary);
-            transform: scale(1.1);
+            background: var(--app-primary-color); /* Solid on hover */
+            transform: scale(1.15) translateY(-2px);
+            box-shadow: 0 5px 12px color-mix(in srgb, var(--app-primary-color) 40%, transparent);
         }
 
+        /* Tabs Navigation */
         .tabs {
             display: flex;
-            background-color: var(--bg-card);
-            border-radius: 12px;
+            background-color: var(--app-secondary-bg-color);
+            border-radius: 16px; /* Match profile */
             overflow: hidden;
-            box-shadow: var(--shadow);
-            margin-bottom: 25px;
+            box-shadow: var(--app-shadow);
+            margin-bottom: 30px;
         }
 
         .tab-btn {
             flex: 1;
-            padding: 15px 10px;
+            padding: 16px 10px;
             background: none;
             border: none;
-            font-size: 0.95rem;
+            font-size: 1rem;
             font-weight: 500;
-            color: #777;
+            color: var(--app-hint-color);
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             position: relative;
+            text-align: center;
         }
 
         .tab-btn.active {
-            color: var(--primary);
+            color: var(--app-primary-color);
             font-weight: 600;
         }
 
-        .tab-btn.active::after {
+        .tab-btn::after { /* Underline indicator */
             content: '';
             position: absolute;
             bottom: 0;
-            left: 25%;
-            width: 50%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
             height: 3px;
-            background-color: var(--primary);
+            background-color: var(--app-primary-color);
             border-radius: 3px 3px 0 0;
+            transition: width 0.3s ease;
         }
 
+        .tab-btn.active::after {
+            width: 50%; /* Animate width for selection */
+        }
+
+        /* Tab Content */
         .tab-content {
             display: none;
         }
-
         .tab-content.active {
             display: block;
         }
 
+        /* Item List & Cards */
         .item-list {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 15px;
+            gap: 18px; /* Increased gap */
+        }
+
+        /* Animation for list items */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .item-card {
             display: flex;
             align-items: center;
-            padding: 16px;
-            background-color: var(--bg-card);
-            border-radius: 12px;
-            box-shadow: var(--shadow);
+            padding: 18px;
+            background-color: var(--app-secondary-bg-color);
+            border-radius: 16px; /* Match profile */
+            box-shadow: var(--app-shadow);
             transition: all 0.3s ease;
             cursor: pointer;
+            border: 1px solid transparent; /* For hover transition */
+            animation: fadeIn 0.5s ease-out both; /* Apply fade-in */
+            /* Stagger animation */
+            /* animation-delay needs to be set in JS */
         }
 
+
         .item-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            border-color: color-mix(in srgb, var(--app-primary-color) 20%, transparent);
         }
 
         .item-img {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
+            width: 65px;
+            height: 65px;
+            border-radius: 14px; /* Slightly softer */
             object-fit: cover;
-            margin-right: 15px;
+            margin-right: 18px;
+            flex-shrink: 0; /* Prevent image shrinking */
         }
 
         .item-info {
             flex: 1;
+            min-width: 0; /* Allow text truncation */
         }
 
         .item-info h3 {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             font-weight: 600;
             margin-bottom: 5px;
+            color: var(--app-text-color);
+            display: flex; /* For badge alignment */
+            align-items: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .item-info p {
-            font-size: 0.85rem;
-            color: #777;
+            font-size: 0.9rem;
+            color: var(--app-hint-color);
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            line-height: 1.5;
         }
 
         .chevron {
-            margin-left: 10px;
-            color: #999;
-            font-size: 1.2rem;
-            transition: transform 0.3s;
+            margin-left: 15px;
+            color: var(--app-hint-color);
+            font-size: 1.3rem; /* Slightly larger */
+            transition: transform 0.3s ease, color 0.3s ease;
+            flex-shrink: 0;
         }
 
         .item-card:hover .chevron {
             transform: translateX(5px);
-            color: var(--primary);
+            color: var(--app-primary-color);
         }
 
+        .badge {
+            display: inline-block;
+            background-color: #FF3B30; /* iOS Red */
+            color: white;
+            font-size: 0.65rem; /* Smaller badge text */
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 10px;
+            margin-left: 10px;
+            vertical-align: middle; /* Align better with text */
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+             /* Remove pulse or keep if desired
+            animation: pulse 1.5s infinite ease-in-out; */
+        }
+
+         /* Pulse animation (optional) */
+         @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.08); opacity: 0.9; }
+         }
+
+        /* Modal */
         .modal {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            inset: 0; /* top, right, bottom, left = 0 */
+            background-color: rgba(0, 0, 0, 0.6);
             display: flex;
             justify-content: center;
-            align-items: flex-end;
+            align-items: flex-end; /* Slide up from bottom */
             z-index: 1000;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
+            transition: opacity 0.3s ease, visibility 0s linear 0.3s;
         }
 
         .modal.open {
             opacity: 1;
             visibility: visible;
+            transition: opacity 0.3s ease, visibility 0s linear 0s;
         }
 
         .modal-content {
             width: 100%;
-            max-width: 500px;
-            background-color: var(--bg-card);
-            border-radius: 20px 20px 0 0;
-            padding: 25px 20px 30px;
+            max-width: 600px; /* Match container */
+            background-color: var(--app-secondary-bg-color);
+            border-radius: 24px 24px 0 0; /* Larger radius for slide-up */
+            padding: 20px 20px 30px;
             transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); /* Smooth ease-out */
             max-height: 90vh;
             overflow-y: auto;
+            box-shadow: 0 -5px 25px rgba(0,0,0,0.15);
         }
 
         .modal.open .modal-content {
@@ -255,419 +337,328 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding-bottom: 18px;
             margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid var(--app-border-color);
+            /* Add handle for visual cue */
+             position: relative;
         }
+         /* Optional Drag Handle Visual */
+         .modal-header::before {
+             content: '';
+             position: absolute;
+             top: -10px;
+             left: 50%;
+             transform: translateX(-50%);
+             width: 40px;
+             height: 4px;
+             background-color: var(--app-border-color);
+             border-radius: 2px;
+         }
+
 
         .modal-title {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             font-weight: 600;
-            color: var(--primary);
+            color: var(--app-text-color);
         }
 
         .close-btn {
             background: none;
             border: none;
-            font-size: 1.5rem;
-            color: #777;
+            font-size: 1.6rem; /* Icon size */
+            color: var(--app-hint-color);
             cursor: pointer;
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
+        }
+        .close-btn svg {
+             width: 24px;
+             height: 24px;
         }
 
         .close-btn:hover {
-            background-color: #f0f0f0;
-            color: #333;
+            background-color: color-mix(in srgb, var(--app-border-color) 50%, transparent);
+            color: var(--app-text-color);
         }
 
         .modal-img {
             width: 100%;
-            height: 200px;
+            height: 220px; /* Slightly taller */
             object-fit: cover;
-            border-radius: 12px;
-            margin-bottom: 15px;
+            border-radius: 16px; /* Match cards */
+            margin-bottom: 20px;
+            background-color: var(--app-border-color); /* Placeholder bg */
         }
 
         .modal-description {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: #555;
-            margin-bottom: 20px;
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--app-text-color);
+             opacity: 0.9;
+            margin-bottom: 25px;
         }
 
         .modal-stats {
-            display: flex;
+            display: grid; /* Use grid for flexibility */
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
             gap: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .stat {
-            flex: 1;
-            background-color: #f8f8f8;
-            padding: 12px 10px;
-            border-radius: 10px;
+            background-color: color-mix(in srgb, var(--app-bg-color) 95%, var(--app-hint-color));
+            padding: 14px 10px;
+            border-radius: 12px;
             text-align: center;
         }
 
         .stat-value {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 5px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--app-primary-color);
+            margin-bottom: 6px;
+            line-height: 1.2;
         }
 
         .stat-label {
-            font-size: 0.8rem;
-            color: #777;
+            font-size: 0.75rem;
+            color: var(--app-hint-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
         }
 
         .cta-btn {
-            display: inline-block;
-            background-color: var(--primary);
-            color: white;
-            padding: 14px 25px;
-            border-radius: 10px;
-            font-weight: 500;
+            display: block; /* Make it block level */
+            background: var(--app-primary-gradient);
+            color: var(--app-primary-text-color);
+            padding: 16px 25px;
+            border-radius: 12px;
+            font-weight: 600; /* Bolder */
             text-decoration: none;
             text-align: center;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             border: none;
             cursor: pointer;
             width: 100%;
-            font-size: 1rem;
+            font-size: 1.05rem;
+            box-shadow: 0 4px 15px color-mix(in srgb, var(--app-primary-color) 30%, transparent);
         }
 
         .cta-btn:hover {
-            background-color: var(--secondary);
-            transform: translateY(-2px);
+            background: var(--app-primary-color);
+            transform: translateY(-3px);
+             box-shadow: 0 6px 20px color-mix(in srgb, var(--app-primary-color) 40%, transparent);
         }
+         .cta-btn:active {
+              transform: translateY(-1px);
+               box-shadow: 0 3px 10px color-mix(in srgb, var(--app-primary-color) 35%, transparent);
+         }
 
-        /* Pulse animation for new badge */
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
 
-        .badge {
-            display: inline-block;
-            background-color: #FF3B30;
-            color: white;
-            font-size: 0.7rem;
-            font-weight: 600;
-            padding: 3px 8px;
-            border-radius: 10px;
-            margin-left: 8px;
-            animation: pulse 1.5s infinite;
-        }
-
-        /* Ripple effect on click */
+        /* Ripple effect (keep if desired, works best on solid backgrounds) */
         .ripple {
             position: relative;
             overflow: hidden;
+            /* Add transform for GPU acceleration */
+            transform: translateZ(0);
         }
+         /* ... rest of ripple CSS ... */
+         .ripple:after {
+             content: ""; display: block; position: absolute;
+             width: 100%; height: 100%; top: 0; left: 0; pointer-events: none;
+             background-image: radial-gradient(circle, var(--app-primary-color) 10%, transparent 10.01%);
+             background-repeat: no-repeat; background-position: 50%;
+             transform: scale(10, 10); opacity: 0; transition: transform .5s, opacity 1s;
+         }
+          .ripple:active:after {
+              transform: scale(0, 0); opacity: .2; transition: 0s;
+          }
 
-        .ripple:after {
-            content: "";
-            display: block;
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
-            background-repeat: no-repeat;
-            background-position: 50%;
-            transform: scale(10, 10);
-            opacity: 0;
-            transition: transform .5s, opacity 1s;
-        }
-
-        .ripple:active:after {
-            transform: scale(0, 0);
-            opacity: .3;
-            transition: 0s;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Profile Section -->
-        <div class="profile">
+        <section class="profile">
             <img src="/assets/IMG_20250319_003006_566.jpg" alt="Profile Image" class="profile-img">
             <h1>Rkgroup</h1>
             <h2>Your Professional Title</h2>
-            <p>Welcome to my Telegram Mini App! I'm a passionate developer/creator who specializes in building innovative solutions. Explore my channels and bots below.</p>
+            <p>Welcome to my Telegram Mini App! Explore my curated channels and innovative bots below. Tap any item for more details.</p>
             <div class="social-links">
-                <a href="#" class="social-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-                    </svg>
+                <a href="#" class="social-btn ripple" aria-label="Facebook">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
                 </a>
-                <a href="#" class="social-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                    </svg>
+                <a href="#" class="social-btn ripple" aria-label="Instagram">
+                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
                 </a>
-                <a href="#" class="social-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
-                    </svg>
+                <a href="#" class="social-btn ripple" aria-label="Twitter">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
                 </a>
-                <a href="#" class="social-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                        <rect x="2" y="9" width="4" height="12"></rect>
-                        <circle cx="4" cy="4" r="2"></circle>
-                    </svg>
+                <a href="#" class="social-btn ripple" aria-label="LinkedIn">
+                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
                 </a>
             </div>
-        </div>
+        </section>
 
-        <!-- Tabs Navigation -->
-        <div class="tabs">
+        <nav class="tabs">
             <button class="tab-btn active ripple" data-tab="channels">Channels</button>
             <button class="tab-btn ripple" data-tab="bots">Bots</button>
-        </div>
+        </nav>
 
-        <!-- Channels Tab Content -->
-        <div class="tab-content active" id="channels">
-            <div class="item-list">
-                <div class="item-card ripple" data-id="channel1">
-                    <img src="/api/placeholder/120/120" alt="Channel 1" class="item-img">
-                    <div class="item-info">
-                        <h3>Channel Name 1</h3>
-                        <p>Latest updates and content about technology, programming and more.</p>
-                    </div>
-                    <span class="chevron">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </span>
-                </div>
-
-                <div class="item-card ripple" data-id="channel2">
-                    <img src="/api/placeholder/120/120" alt="Channel 2" class="item-img">
-                    <div class="item-info">
-                        <h3>Channel Name 2 <span class="badge">NEW</span></h3>
-                        <p>Daily inspiration, motivation, and valuable resources for your growth.</p>
-                    </div>
-                    <span class="chevron">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </span>
-                </div>
-
-                <div class="item-card ripple" data-id="channel3">
-                    <img src="/api/placeholder/120/120" alt="Channel 3" class="item-img">
-                    <div class="item-info">
-                        <h3>Channel Name 3</h3>
-                        <p>Exclusive content, behind-the-scenes, and community discussions.</p>
-                    </div>
-                    <span class="chevron">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </span>
+        <section>
+            <div class="tab-content active" id="channels">
+                <div class="item-list" id="channels-list">
+                    <p>Loading channels...</p>
                 </div>
             </div>
-        </div>
 
-        <!-- Bots Tab Content -->
-        <div class="tab-content" id="bots">
-            <div class="item-list">
-                <div class="item-card ripple" data-id="bot1">
-                    <img src="/api/placeholder/120/120" alt="Bot 1" class="item-img">
-                    <div class="item-info">
-                        <h3>Bot Name 1</h3>
-                        <p>Automated assistant for managing your daily tasks and scheduling.</p>
-                    </div>
-                    <span class="chevron">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </span>
-                </div>
-
-                <div class="item-card ripple" data-id="bot2">
-                    <img src="/api/placeholder/120/120" alt="Bot 2" class="item-img">
-                    <div class="item-info">
-                        <h3>Bot Name 2 <span class="badge">NEW</span></h3>
-                        <p>AI-powered bot that provides instant answers to your questions.</p>
-                    </div>
-                    <span class="chevron">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </span>
-                </div>
-
-                <div class="item-card ripple" data-id="bot3">
-                    <img src="/api/placeholder/120/120" alt="Bot 3" class="item-img">
-                    <div class="item-info">
-                        <h3>Bot Name 3</h3>
-                        <p>Interactive bot for fun games and entertainment in your groups.</p>
-                    </div>
-                    <span class="chevron">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </span>
+            <div class="tab-content" id="bots">
+                <div class="item-list" id="bots-list">
+                    <p>Loading bots...</p>
                 </div>
             </div>
-        </div>
+        </section>
     </div>
 
-    <!-- Modal for Item Details -->
-    <div class="modal" id="detailModal">
+    <div class="modal" id="detailModal" aria-labelledby="modalTitle" aria-modal="true" role="dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Item Details</h2>
-                <button class="close-btn" id="closeModal">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
+                <h2 class="modal-title" id="modalTitle">Item Details</h2>
+                <button class="close-btn" id="closeModal" aria-label="Close modal">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
             </div>
-            <img src="/api/placeholder/640/360" alt="Channel/Bot" class="modal-img" id="modalImg">
-            <div class="modal-description" id="modalDesc">
-                Detailed information about this channel or bot will appear here. This section can include the purpose, content type, frequency of updates, and other relevant details.
-            </div>
+            <img src="/api/placeholder/640/360/tech/1" alt="Item Image" class="modal-img" id="modalImg">
+            <p class="modal-description" id="modalDesc">
+                Detailed information will appear here.
+            </p>
             <div class="modal-stats">
                 <div class="stat">
-                    <div class="stat-value" id="statMembers">5.2K</div>
+                    <div class="stat-value" id="statMembers">---</div>
                     <div class="stat-label">Members</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-value" id="statPosts">120</div>
+                    <div class="stat-value" id="statPosts">---</div>
                     <div class="stat-label">Posts</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-value" id="statRating">4.8</div>
+                    <div class="stat-value" id="statRating">---</div>
                     <div class="stat-label">Rating</div>
                 </div>
             </div>
-            <a href="#" class="cta-btn ripple" id="actionBtn">Join Channel</a>
+            <a href="#" class="cta-btn ripple" id="actionBtn">Action</a>
         </div>
     </div>
 
     <script>
-        // Data for channels and bots
-        const data = {
+        // --- Data ---
+        // Store all dynamic data here
+        const appData = {
             channels: {
                 channel1: {
+                    id: "channel1", // Unique ID for the item
                     title: "Tech Insights",
-                    image: "/api/placeholder/640/360",
+                    shortDesc: "Latest updates and content about technology, programming and more.",
+                    image: "/api/placeholder/120/120/tech/1", // Small image for list
+                    modalImage: "/api/placeholder/640/360/tech/1", // Larger image for modal
                     description: "Your go-to channel for the latest updates in technology, programming tips, industry news, and in-depth analysis. We cover everything from AI and machine learning to web development and mobile apps.",
                     members: "5.2K",
                     posts: "120",
                     rating: "4.8",
                     action: "Join Channel",
-                    actionUrl: "https://t.me/channel1"
+                    actionUrl: "https://t.me/channel1_replace_me", // Replace with actual URL
+                    isNew: false
                 },
                 channel2: {
+                    id: "channel2",
                     title: "Daily Motivation",
-                    image: "/api/placeholder/640/360",
+                    shortDesc: "Daily inspiration, motivation, and valuable resources for your growth.",
+                    image: "/api/placeholder/120/120/people/1",
+                    modalImage: "/api/placeholder/640/360/people/1",
                     description: "Start your day with inspiration! This channel provides daily quotes, motivational stories, productivity tips, and resources to help you grow personally and professionally.",
                     members: "3.7K",
                     posts: "365",
                     rating: "4.9",
                     action: "Subscribe",
-                    actionUrl: "https://t.me/channel2"
+                    actionUrl: "https://t.me/channel2_replace_me",
+                    isNew: true // Add flag for new badge
                 },
                 channel3: {
-                    title: "Creator's Studio",
-                    image: "/api/placeholder/640/360",
-                    description: "Get exclusive behind-the-scenes content, early access to new projects, and join community discussions. This is where I share my creative process and connect with my audience.",
-                    members: "2.1K",
-                    posts: "78",
-                    rating: "4.6",
-                    action: "Join Now",
-                    actionUrl: "https://t.me/channel3"
+                     id: "channel3",
+                     title: "Creator's Studio",
+                     shortDesc: "Exclusive content, behind-the-scenes, and community discussions.",
+                     image: "/api/placeholder/120/120/arch/1",
+                     modalImage: "/api/placeholder/640/360/arch/1",
+                     description: "Get exclusive behind-the-scenes content, early access to new projects, and join community discussions. This is where I share my creative process and connect with my audience.",
+                     members: "2.1K",
+                     posts: "78",
+                     rating: "4.6",
+                     action: "Join Now",
+                     actionUrl: "https://t.me/channel3_replace_me",
+                     isNew: false
                 }
             },
             bots: {
                 bot1: {
+                    id: "bot1",
                     title: "TaskMaster Bot",
-                    image: "/api/placeholder/640/360",
+                    shortDesc: "Automated assistant for managing your daily tasks and scheduling.",
+                    image: "/api/placeholder/120/120/tech/2",
+                    modalImage: "/api/placeholder/640/360/tech/2",
                     description: "An automated assistant that helps you manage tasks, set reminders, schedule events, and track your productivity. Perfect for busy professionals and teams who need to stay organized.",
-                    members: "8.3K",
-                    posts: "N/A",
+                    members: "8.3K Users", // Clarify "members" for bots
+                    posts: "Utility",     // Use "posts" field differently for bots if needed
                     rating: "4.7",
                     action: "Start Bot",
-                    actionUrl: "https://t.me/bot1"
+                    actionUrl: "https://t.me/bot1_replace_me",
+                    isNew: false
                 },
                 bot2: {
-                    title: "Knowledge AI Bot",
-                    image: "/api/placeholder/640/360",
-                    description: "AI-powered assistant that provides instant answers to your questions, helps with research, and offers explanations on complex topics. It's like having a personal tutor available 24/7.",
-                    members: "10.5K",
-                    posts: "N/A",
-                    rating: "4.9",
-                    action: "Chat Now",
-                    actionUrl: "https://t.me/bot2"
+                     id: "bot2",
+                     title: "Knowledge AI Bot",
+                     shortDesc: "AI-powered bot that provides instant answers to your questions.",
+                     image: "/api/placeholder/120/120/tech/3",
+                     modalImage: "/api/placeholder/640/360/tech/3",
+                     description: "AI-powered assistant that provides instant answers to your questions, helps with research, and offers explanations on complex topics. It's like having a personal tutor available 24/7.",
+                     members: "10.5K Users",
+                     posts: "AI",
+                     rating: "4.9",
+                     action: "Chat Now",
+                     actionUrl: "https://t.me/bot2_replace_me",
+                     isNew: true
                 },
                 bot3: {
-                    title: "GameZone Bot",
-                    image: "/api/placeholder/640/360",
-                    description: "Interactive entertainment bot that brings fun games to your Telegram groups. Features include trivia, word games, puzzles, and multiplayer competitions to engage with friends.",
-                    members: "6.2K",
-                    posts: "N/A",
-                    rating: "4.5",
-                    action: "Play Games",
-                    actionUrl: "https://t.me/bot3"
-                }
+                     id: "bot3",
+                     title: "GameZone Bot",
+                     shortDesc: "Interactive bot for fun games and entertainment in your groups.",
+                     image: "/api/placeholder/120/120/tech/4",
+                     modalImage: "/api/placeholder/640/360/tech/4",
+                     description: "Interactive entertainment bot that brings fun games to your Telegram groups. Features include trivia, word games, puzzles, and multiplayer competitions to engage with friends.",
+                     members: "6.2K Groups",
+                     posts: "Games",
+                     rating: "4.5",
+                     action: "Play Games",
+                     actionUrl: "https://t.me/bot3_replace_me",
+                     isNew: false
+                 }
             }
         };
 
-        // Initialize Telegram WebApp
-        const telegramWebApp = window.Telegram?.WebApp;
-        if (telegramWebApp) {
-            telegramWebApp.ready();
-            telegramWebApp.expand();
-            
-            // Set theme based on Telegram theme
-            if (telegramWebApp.colorScheme === 'dark') {
-                document.documentElement.style.setProperty('--bg-light', '#1E1E1E');
-                document.documentElement.style.setProperty('--bg-card', '#2A2A2A');
-                document.documentElement.style.setProperty('--text', '#FFFFFF');
-                document.documentElement.style.setProperty('--border', '#3A3A3A');
-            }
-        }
-
-        // Tab navigation
+        // --- DOM Elements ---
+        const tg = window.Telegram?.WebApp;
         const tabBtns = document.querySelectorAll('.tab-btn');
         const tabContents = document.querySelectorAll('.tab-content');
-
-        tabBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                // Remove active class from all tabs
-                tabBtns.forEach(b => b.classList.remove('active'));
-                tabContents.forEach(c => c.classList.remove('active'));
-                
-                // Add active class to clicked tab
-                btn.classList.add('active');
-                const tabId = btn.getAttribute('data-tab');
-                document.getElementById(tabId).classList.add('active');
-            });
-        });
-
-        // Modal functionality
+        const channelsList = document.getElementById('channels-list');
+        const botsList = document.getElementById('bots-list');
         const modal = document.getElementById('detailModal');
-        const closeModal = document.getElementById('closeModal');
-        const itemCards = document.querySelectorAll('.item-card');
-        const modalTitle = document.querySelector('.modal-title');
+        const closeModalBtn = document.getElementById('closeModal');
+        const modalTitle = document.getElementById('modalTitle');
         const modalImg = document.getElementById('modalImg');
         const modalDesc = document.getElementById('modalDesc');
         const statMembers = document.getElementById('statMembers');
@@ -675,67 +666,244 @@
         const statRating = document.getElementById('statRating');
         const actionBtn = document.getElementById('actionBtn');
 
-        // Open modal with item details
-        itemCards.forEach(card => {
-            card.addEventListener('click', () => {
-                const itemId = card.getAttribute('data-id');
-                const tabId = document.querySelector('.tab-btn.active').getAttribute('data-tab');
-                const itemData = data[tabId][itemId];
-                
-                // Update modal content
-                modalTitle.textContent = itemData.title;
-                modalImg.src = itemData.image;
-                modalImg.alt = itemData.title;
-                modalDesc.textContent = itemData.description;
-                statMembers.textContent = itemData.members;
-                statPosts.textContent = itemData.posts;
-                statRating.textContent = itemData.rating;
-                actionBtn.textContent = itemData.action;
-                actionBtn.href = itemData.actionUrl;
-                
-                // Show modal
-                modal.classList.add('open');
-                
-                // Add a little animation delay for better UX
-                setTimeout(() => {
-                    document.body.style.overflow = 'hidden';
-                }, 300);
+        // --- Functions ---
+
+        /**
+         * Applies theme colors from Telegram WebApp themeParams.
+         */
+        function applyTheme(themeParams) {
+            // You can be more specific here if needed, mapping more themeParams keys
+            // to your CSS variables.
+             document.documentElement.style.setProperty('--tg-theme-bg-color', themeParams.bg_color);
+             document.documentElement.style.setProperty('--tg-theme-text-color', themeParams.text_color);
+             document.documentElement.style.setProperty('--tg-theme-hint-color', themeParams.hint_color);
+             document.documentElement.style.setProperty('--tg-theme-link-color', themeParams.link_color);
+             document.documentElement.style.setProperty('--tg-theme-button-color', themeParams.button_color);
+             document.documentElement.style.setProperty('--tg-theme-button-text-color', themeParams.button_text_color);
+             document.documentElement.style.setProperty('--tg-theme-secondary-bg-color', themeParams.secondary_bg_color);
+        }
+
+        /**
+         * Creates the HTML for a single item card.
+         * @param {object} item - The channel or bot data object.
+         * @returns {string} - The HTML string for the item card.
+         */
+        function createItemCardHTML(item, itemType) {
+            // Note: Added data-item-id and data-item-type attributes
+             return `
+                <article class="item-card ripple" data-item-id="${item.id}" data-item-type="${itemType}" style="animation-delay: ${Math.random() * 0.3}s;">
+                    <img src="${item.image}" alt="${item.title}" class="item-img" loading="lazy">
+                    <div class="item-info">
+                        <h3>
+                            ${item.title}
+                            ${item.isNew ? '<span class="badge">NEW</span>' : ''}
+                        </h3>
+                        <p>${item.shortDesc}</p>
+                    </div>
+                    <span class="chevron">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </span>
+                </article>
+            `;
+        }
+
+        /**
+         * Renders items into the specified list container.
+         * @param {object} items - Object containing item data (e.g., appData.channels).
+         * @param {HTMLElement} container - The container element to inject HTML into.
+         * @param {string} itemType - 'channels' or 'bots'.
+         */
+        function renderItems(items, container, itemType) {
+            if (!container) return;
+            container.innerHTML = ''; // Clear loading message or previous items
+            if (Object.keys(items).length === 0) {
+                container.innerHTML = '<p>No items found.</p>';
+                return;
+            }
+            let contentHTML = '';
+            for (const key in items) {
+                contentHTML += createItemCardHTML(items[key], itemType);
+            }
+            container.innerHTML = contentHTML;
+        }
+
+        /**
+         * Sets up the tab switching functionality.
+         */
+        function setupTabs() {
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tabId = btn.getAttribute('data-tab');
+
+                    // Update buttons state
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    // Update content visibility
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    const activeContent = document.getElementById(tabId);
+                    if (activeContent) {
+                         activeContent.classList.add('active');
+                    }
+                });
             });
-        });
+        }
 
-        // Close modal
-        closeModal.addEventListener('click', () => {
-            modal.classList.remove('open');
-            document.body.style.overflow = '';
-        });
+        /**
+         * Updates the modal content based on selected item data.
+         * @param {object} itemData - The data for the selected channel or bot.
+         */
+        function updateModalContent(itemData) {
+            modalTitle.textContent = itemData.title;
+            modalImg.src = itemData.modalImage || itemData.image; // Use modal image if available
+            modalImg.alt = itemData.title;
+            modalDesc.textContent = itemData.description;
+            statMembers.textContent = itemData.members || '---';
+            statPosts.textContent = itemData.posts || '---';
+            statRating.textContent = itemData.rating || '---';
+            actionBtn.textContent = itemData.action;
+            actionBtn.href = itemData.actionUrl;
+            // Store URL for the action button handler
+            actionBtn.dataset.url = itemData.actionUrl;
+        }
 
-        // Close modal when clicking outside of content
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.classList.remove('open');
-                document.body.style.overflow = '';
+
+        /**
+         * Sets up modal open/close functionality and item click handling.
+         */
+        function setupModal() {
+            // Use event delegation on the container holding the lists
+            const listContainer = document.querySelector('.container > section'); // More robust selector
+
+             listContainer.addEventListener('click', (e) => {
+                const card = e.target.closest('.item-card');
+                if (card) {
+                    const itemId = card.dataset.itemId;
+                    const itemType = card.dataset.itemType; // 'channels' or 'bots'
+                     const itemData = appData[itemType]?.[itemId];
+
+                    if (itemData) {
+                         updateModalContent(itemData);
+                        modal.classList.add('open');
+                         // Optional: Prevent body scroll when modal is open
+                         document.body.style.overflow = 'hidden';
+                     } else {
+                        console.error("Data not found for:", itemType, itemId);
+                     }
+                 }
+             });
+
+
+            // Close modal function
+            const closeModal = () => {
+                 modal.classList.remove('open');
+                 // Restore body scroll
+                 document.body.style.overflow = '';
             }
-        });
 
-        // Handle back button for modal
-        window.addEventListener('popstate', () => {
-            if (modal.classList.contains('open')) {
-                modal.classList.remove('open');
-                document.body.style.overflow = '';
-            }
-        });
+            // Close button event
+             closeModalBtn.addEventListener('click', closeModal);
 
-        // Handle CTA button click
-        actionBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            
-            // If Telegram WebApp is available, use its methods
-            if (telegramWebApp) {
-                telegramWebApp.openTelegramLink(actionBtn.href);
+            // Close modal when clicking on the backdrop
+             modal.addEventListener('click', (e) => {
+                // Check if the click is directly on the modal backdrop
+                if (e.target === modal) {
+                     closeModal();
+                 }
+             });
+
+            // Handle Escape key to close modal
+             window.addEventListener('keydown', (e) => {
+                 if (e.key === 'Escape' && modal.classList.contains('open')) {
+                     closeModal();
+                 }
+             });
+
+              // Handle modal CTA button click
+              actionBtn.addEventListener('click', (e) => {
+                 e.preventDefault();
+                 const url = actionBtn.dataset.url; // Get URL from data attribute
+                 if (!url) return;
+
+                 if (tg) {
+                     // Use Telegram's method to open links safely
+                     tg.openTelegramLink(url);
+                     // Optionally close the modal after action
+                     // closeModal();
+                 } else {
+                     // Fallback for browsers
+                     window.open(url, '_blank');
+                 }
+             });
+
+        }
+
+
+         /**
+         * Initializes the Telegram Mini App.
+         */
+        function initApp() {
+            if (tg) {
+                tg.ready();
+                // Expand the app to full height
+                tg.expand();
+
+                // Apply Telegram's theme
+                if (tg.themeParams) {
+                    applyTheme(tg.themeParams);
+                }
+
+                 // Listen for theme changes
+                 tg.onEvent('themeChanged', () => {
+                     if (tg.themeParams) {
+                         applyTheme(tg.themeParams);
+                     }
+                 });
+
+                 // Optional: Configure Main Button (if needed)
+                 // tg.MainButton.setText("Close App");
+                 // tg.MainButton.show();
+                 // tg.onEvent('mainButtonClicked', () => {
+                 //     tg.close();
+                 // });
+
+                 // Optional: Configure Back Button
+                 tg.BackButton.show();
+                 tg.onEvent('backButtonClicked', () => {
+                      if (modal.classList.contains('open')) {
+                           modal.classList.remove('open');
+                           document.body.style.overflow = '';
+                      } else {
+                           // Optional: Navigate back or close app if desired
+                           // window.history.back(); // Or tg.close();
+                      }
+                 });
+
             } else {
-                window.open(actionBtn.href, '_blank');
+                console.warn('Telegram WebApp script not loaded or not running inside Telegram.');
+                 // Apply default theme if outside Telegram
+                 applyTheme({ // Provide default values matching CSS :root fallbacks
+                     bg_color: '#F8F9FA', text_color: '#212529', hint_color: '#6c757d',
+                     link_color: '#007bff', button_color: '#007bff', button_text_color: '#ffffff',
+                     secondary_bg_color: '#ffffff'
+                 });
             }
-        });
+
+            // Initial rendering of items
+            renderItems(appData.channels, channelsList, 'channels');
+            renderItems(appData.bots, botsList, 'bots');
+
+            // Setup UI interactions
+            setupTabs();
+            setupModal();
+
+             console.log("Mini App Initialized");
+         }
+
+        // --- Initialization ---
+        // Use DOMContentLoaded to ensure the DOM is ready before running scripts
+        document.addEventListener('DOMContentLoaded', initApp);
+
     </script>
 </body>
 </html>
