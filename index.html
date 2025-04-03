@@ -31,6 +31,21 @@
                 </a>
             </div>
         </div>
+                <!-- Add this HTML for the menu button in the container div, after the profile div -->
+        <div class="menu-container">
+            <button class="menu-btn ripple" id="menuBtn" aria-label="Menu">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="#" class="dropdown-item ripple">Future Plans</a>
+                <a href="#" class="dropdown-item ripple">Code of Conduct</a>
+                <a href="#" class="dropdown-item ripple">Privacy Policy</a>
+            </div>
+        </div>
 
         <div class="tabs">
             <button class="tab-btn active ripple" data-tab="channel">channel</button>
