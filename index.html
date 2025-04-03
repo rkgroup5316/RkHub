@@ -31,7 +31,7 @@
                 </a>
             </div>
         </div>
-                <!-- Add this HTML for the menu button in the container div, after the profile div -->
+       <!-- Add this HTML for the menu button in the container div, after the profile div -->
         <div class="menu-container">
             <button class="menu-btn ripple" id="menuBtn" aria-label="Menu">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -211,7 +211,7 @@
         } else {
             console.warn("Telegram WebApp script not loaded or not in Telegram environment.");
         }
-
+        
         // --- DOM ELEMENTS ---
         const tabBtns = document.querySelectorAll('.tab-btn');
         const tabContents = document.querySelectorAll('.tab-content');
@@ -456,6 +456,55 @@
             tabBtns.forEach(addRippleEffect);
             // Ripple for CTA button in modal
             addRippleEffect(actionBtn);
+        });
+    // Menu Button & Dropdown Functionality
+        const menuBtn = document.getElementById('menuBtn');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        
+        // Add ripple effect to menu button
+        addRippleEffect(menuBtn);
+        
+        // Add ripple effect to dropdown items
+        document.querySelectorAll('.dropdown-item').forEach(item => {
+            addRippleEffect(item);
+        });
+        
+        // Toggle dropdown menu
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('active');
+            
+            if (telegramWebApp) {
+                telegramWebApp.HapticFeedback.impactOccurred('light');
+            }
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!menuBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.remove('active');
+            }
+        });
+        
+        // Prevent clicks inside dropdown from closing it
+        dropdownMenu.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+        
+        // Handle dropdown item clicks
+        document.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('click', () => {
+                if (telegramWebApp) {
+                    telegramWebApp.HapticFeedback.impactOccurred('medium');
+                }
+                
+                // You can add specific actions for each menu item here
+                const itemText = item.textContent;
+                console.log(`${itemText} clicked`);
+                
+                // Optional: Close the dropdown after clicking an item
+                dropdownMenu.classList.remove('active');
+            });
         });
 
     </script>
